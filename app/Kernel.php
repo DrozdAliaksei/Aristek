@@ -14,6 +14,7 @@ class Kernel
 
     public function __construct()
     {
+
     }
 
     public function getModel(): Model

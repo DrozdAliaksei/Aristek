@@ -26,7 +26,7 @@ class User implements Model
     }
 
     public function getList(): array {
-        $sql = '';
+        $sql = "select * from home_users" ;
         $options = [];
         $users = $this->connection->fetchAll($sql, $options);
 
