@@ -5,11 +5,12 @@
  * Date: 1.11.18
  * Time: 17.53
  */
+
 namespace Model;
 
 use DB\Connection;
 
-class User implements Model
+class UserModel implements Model
 {
     /**
      * @var Connection
@@ -25,11 +26,9 @@ class User implements Model
         $this->connection = $connection;
     }
 
-    public function getList(): array {
-        $sql = "select * from home_users" ;
-        $options = [];
-        $users = $this->connection->fetchAll($sql, $options);
-
-        return $users;
+    public function getList(): array
+    {
+        $sql = "SELECT * FROM users WHERE 1";
+        return $this->connection->fetchAll($sql);
     }
 }

@@ -6,17 +6,17 @@
  * Time: 17.54
  */
 
+
+use Core\Request\RequestFactory;
+
+require __DIR__.'/../app/autoload.php';
+require './../app/Kernel.php';
+
 $kernel = new Kernel();
-$model = $kernel->getModel();
-$users = $model->getList();
-?>
-<!doctype html>
-<html>
-<head>
-
-</head>
-<body>
-
-</body>
-</html>
-
+try {
+    $request = RequestFactory::createRequest();
+    $response = $kernel->createResponse($request);
+} catch (\Exception $exception) {
+    //TODO create response
+}
+$response->send();
