@@ -8,7 +8,7 @@
 
 namespace Model;
 
-use DB\Connection;
+use Core\DB\Connection;
 
 class UserModel implements Model
 {

@@ -12,6 +12,9 @@ use Core\Request\Request;
 
 class Router
 {
+    /**
+     * @var Route[]
+     */
     private static $routes = [];
 
     /**
@@ -20,11 +23,20 @@ class Router
      */
     public static function findRoute(Request $request)
     {
+        foreach (self::$routes as $route) {
+            if ($route->match($request->getPath())) {
+                return $route;
+            }
+        }
 
+        return null;
     }
 
 
-    public static function add(string $string, string $controllerClass, string $method, array $rules = [])
+    public static function add(string $pattern, string $controllerClass, string $method, array $rules = [])
     {
+        self::$routes[] = new Route($pattern, $controllerClass, $method, $rules);
     }
+
+
 }

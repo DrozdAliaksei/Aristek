@@ -1,0 +1,4 @@
+DirectoryIndex  /home/dii/PhpstormProjects/smart_home/web/app.php
+
+RemoveHandler .php .htm .html
+AddHandler application/x-httpd-php .php .htm .html

@@ -10,7 +10,6 @@
 use Core\Request\RequestFactory;
 
 require __DIR__.'/../app/autoload.php';
-require './../app/Kernel.php';
 
 $kernel = new Kernel();
 try {

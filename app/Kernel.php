@@ -36,9 +36,10 @@ class Kernel
     public function createResponse(Request $request): Response
     {
         $route = $this->getRoute($request);
-        $controller = $controller = $this->getController($route);
+        $controller = $this->getController($route);
 
         return call_user_func([$controller, $route->getMethod()], $request);
+
     }
 
     /*public function getModel(): Model
@@ -81,4 +82,11 @@ class Kernel
         return $route;
     }
 
-}
+    private function getController(Route $route)
+    {
+        $class = $route->getControllerClass();
+        $model = new \Model\UserModel($this->connection);
+        return new $class($model);
+    }
+
+}   
