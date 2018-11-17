@@ -29,7 +29,7 @@ class UserModel implements Model
     public function getList(): array
     {
         $sql = "SELECT * FROM users WHERE 1";
-        echo 'User_method_get_list'.PHP_EOL;
+        #echo 'User_method_get_list'.PHP_EOL;
         return $this->connection->fetchAll($sql);
     }
 }

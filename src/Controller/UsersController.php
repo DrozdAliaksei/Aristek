@@ -33,7 +33,7 @@ class UsersController
         require __DIR__.'/../../app/view/Users/list.php';
         $content = ob_get_contents();
         ob_end_clean();
-        echo 'list and return Response'.PHP_EOL;
+        #echo 'list and return Response'.PHP_EOL;
         return new Response($content);
     }
 }

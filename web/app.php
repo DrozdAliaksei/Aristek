@@ -17,6 +17,6 @@ try {
     $response = $kernel->createResponse($request);
 } catch (\Exception $exception) {
     //TODO create response
-    echo 'app_exception';
+    #echo 'app_exception';
 }
 $response->send();
