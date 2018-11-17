@@ -45,6 +45,7 @@ class Route
      */
     public function getControllerClass(): string
     {
+        echo 'RouteGetController'.PHP_EOL;
         return $this->controllerClass;
     }
 
@@ -53,12 +54,14 @@ class Route
      */
     public function getMethod(): string
     {
+        echo 'RouteGetMethod'.PHP_EOL;
         return $this->method;
     }
 
 
     public function match(string $path):bool
     {
+        echo 'RouteMatch'.PHP_EOL;
         return $this->path === $path;
     }
 }

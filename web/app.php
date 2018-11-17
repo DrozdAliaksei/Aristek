@@ -10,12 +10,13 @@
 use Core\Request\RequestFactory;
 
 require __DIR__.'/../app/autoload.php';
-
 $kernel = new Kernel();
+
 try {
     $request = RequestFactory::createRequest();
     $response = $kernel->createResponse($request);
 } catch (\Exception $exception) {
     //TODO create response
+    echo 'app_exception';
 }
 $response->send();

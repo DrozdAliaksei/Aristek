@@ -37,7 +37,7 @@ class Kernel
     {
         $route = $this->getRoute($request);
         $controller = $this->getController($route);
-
+        echo 'Kernel_createResponce'.PHP_EOL;
         return call_user_func([$controller, $route->getMethod()], $request);
 
     }
@@ -77,8 +77,9 @@ class Kernel
         $route = Router::findRoute($request);
         if ($route === null) {
             //TODO throw exception 404
+            echo 'Kernel_dont_found_route'.PHP_EOL;
         }
-
+        echo 'Kernel_getRoute'.PHP_EOL;
         return $route;
     }
 
@@ -86,6 +87,7 @@ class Kernel
     {
         $class = $route->getControllerClass();
         $model = new \Model\UserModel($this->connection);
+        echo 'Kernel_getController'.PHP_EOL;
         return new $class($model);
     }
 
