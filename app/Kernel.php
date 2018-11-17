@@ -79,7 +79,7 @@ class Kernel
             //TODO throw exception 404
             #echo 'Kernel_dont_found_route'.PHP_EOL;
         }
-        echo 'Kernel_getRoute'.PHP_EOL;
+        #echo 'Kernel_getRoute'.PHP_EOL;
         return $route;
     }
 
