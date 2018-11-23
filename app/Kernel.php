@@ -26,7 +26,12 @@ class Kernel
     public function __construct()
     {
         $this->config = require __DIR__.'/config/config.php';
-        $this->createConnection();
+        $this->container = \Core\ServiceContainer::getInstance($this->config);
+    }
+
+    public function getConnection()
+    {
+        return $this->connection;
     }
 
     /**
@@ -37,8 +42,9 @@ class Kernel
     {
         $route = $this->getRoute($request);
         $controller = $this->getController($route);
-        #echo 'Kernel_createResponce'.PHP_EOL;
-        return call_user_func([$controller, $route->getMethod()], $request);
+        $params = $route->getPathValues();
+        array_unshift($params,$request);
+        return call_user_func_array([$controller, $route->getMethod()], $params);
 
     }
 
@@ -47,15 +53,6 @@ class Kernel
         return new UserModel($this->connection);
 
     }*/
-
-    private function createConnection()
-    {
-        $config = $this->config['database'];
-        $dsn = $this->getDSN($config);
-        $pdo = new \PDO($dsn, $config['user'], $config['password']);
-        $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        $this->connection = new Connection($pdo);
-    }
 
     /**
      * @param $host
@@ -77,18 +74,14 @@ class Kernel
         $route = Router::findRoute($request);
         if ($route === null) {
             //TODO throw exception 404
-            #echo 'Kernel_dont_found_route'.PHP_EOL;
+            echo 'Kernel_dont_found_route => ERROR '.PHP_EOL;
         }
-        #echo 'Kernel_getRoute'.PHP_EOL;
         return $route;
     }
 
     private function getController(Route $route)
     {
-        $class = $route->getControllerClass();
-        $model = new \Model\UserModel($this->connection);
-        #echo 'Kernel_getController'.PHP_EOL;
-        return new $class($model);
+        return $this->container->get($route->getControllerClass());
     }
 
 }   

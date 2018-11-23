@@ -9,6 +9,6 @@
 use Core\Router\Router;
 
 Router::add('/users', \Controller\UsersController::class, 'list');
-//Router::add('users/new', \Controller\UsersController::class, 'create');
-//Router::add('users/{id}/edit', \Controller\UsersController::class, 'edit', ['id' => '\d+']);
-//Router::add('users/{id}/delete', \Controller\UsersController::class, 'delete', ['id' => '\d+']);
+Router::add('/users/create', \Controller\UsersController::class, 'create');
+//Router::add('/users/{id}/edit', \Controller\UsersController::class, 'edit', ['id' => '\d+']);
+//Router::add('/users/{id}/delete', \Controller\UsersController::class, 'delete', ['id' => '\d+']);

@@ -14,7 +14,7 @@ class RequestFactory
     public static function createRequest(): Request
     {
         $request = new Request(
-            self::getPath(), self::getRequest()
+            self::getPath(),self::getMethod(), self::getRequest()
         );
 
         return $request;
@@ -24,12 +24,15 @@ class RequestFactory
     {
         #echo $_SERVER['PATH_INFO'].PHP_EOL;
             return $_SERVER['PATH_INFO'];
-            #return $_SERVER['REQUEST_URI'];
-            #return parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     }
 
     private static function getRequest(): array
     {
         return $_REQUEST;
+    }
+
+    private static function getMethod():string
+    {
+        return $_SERVER['REQUEST_METHOD'];
     }
 }

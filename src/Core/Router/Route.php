@@ -64,4 +64,12 @@ class Route
         #echo 'RouteMatch'.PHP_EOL;
         return $this->path === $path;
     }
+
+    public function getPathValues():array
+    {
+        //preg_match_all;
+        // $^/users/\(\d+)/edit$#i
+        return [];
+        //ToDo implement
+    }
 }

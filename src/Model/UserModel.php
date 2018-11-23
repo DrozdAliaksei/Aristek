@@ -29,7 +29,18 @@ class UserModel implements Model
     public function getList(): array
     {
         $sql = "SELECT * FROM users WHERE 1";
-        #echo 'User_method_get_list'.PHP_EOL;
+        #echo 'UserModel_method_get_list'.PHP_EOL;
         return $this->connection->fetchAll($sql);
+        //ToDo rewrite
+    }
+
+    public function create(array $user)
+    {
+        $user['roles'] = json_encode($user['roles']);
+        $sql = "INSERT INTO users  (login,password,roles) 
+                VALUES (:login,:password,:roles)";
+        #echo 'UserModel_addUser'.PHP_EOL;
+        $this->connection->execute($sql,$user);
+
     }
 }

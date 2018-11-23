@@ -19,10 +19,11 @@ class Connection
      * Connection constructor.
      * @param \PDO $pdo
      */
-    public function __construct(\PDO $pdo)
+    public function __construct(array $database)
     {
-        $this->pdo = $pdo;
-    }
+        $pdo = new \PDO(sprintf($database['dsn']), sprintf($database['user']), sprintf($database['password']));
+        $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $this->pdo = $pdo;}
 
     /**
      * @param string $sql
@@ -34,6 +35,12 @@ class Connection
         $statement = $this->pdo->prepare($sql);
         $statement->execute($properties);
 
-        return $statement->fetchAll();
+        return $statement->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    public function execute(string $sql,array $properties = null)
+    {
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute($properties);
     }
 }

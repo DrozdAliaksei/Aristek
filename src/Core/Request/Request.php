@@ -10,7 +10,8 @@ namespace Core\Request;
 
 class Request
 {
-
+    const POST = 'POST';
+    const GET = 'GET';
     /**
      * @var array
      */
@@ -20,15 +21,19 @@ class Request
      * @var string
      */
     private $path;
+    private $method;
 
     /**
      * Request constructor.
-     * @param array $get
+     * @param string $path
+     * @param string $method
+     * @param array $request
      */
-    public function __construct(string $path,array $request)
+    public function __construct(string $path, string $method, array $request)
     {
         $this->path = $path;
         $this->request = $request;
+        $this->method = $method;
     }
 
     /**
@@ -42,5 +47,15 @@ class Request
     public function getPath()
     {
         return $this->path;
+    }
+
+    public function getMethod()
+    {
+        return $this->method;
+    }
+
+    public function get(string $key, $default = null)
+    {
+        return $this->request[$key] ?? $default;
     }
 }

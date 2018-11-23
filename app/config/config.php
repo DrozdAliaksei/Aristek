@@ -7,11 +7,12 @@
  */
 
 return [
-    'database' => [
-        'host' => 'localhost',
-        'port' => 3306,
-        'database' => 'basic',
-        'user' => 'root',
-        'password' => '1967',
-    ]
+    'parameters' => [
+         'database' => [
+            'dsn' => 'mysql:host=localhost; dbname=basic',
+            'user' => 'root',
+            'password' => '1967',
+        ]
+    ],
+    'services' => require_once __DIR__ . '/services.php',
 ];
