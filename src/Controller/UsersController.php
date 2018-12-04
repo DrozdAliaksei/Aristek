@@ -9,7 +9,10 @@
 namespace Controller;
 
 use Core\Request\Request;
+use Core\Response\RedirectResponse;
 use Core\Response\Response;
+use Core\Response\TemplateResource;
+use Form\UserForm;
 use Model\UserModel;
 
 class UsersController
@@ -17,24 +20,19 @@ class UsersController
     /**
      * @var UserModel
      */
-    private $model;
+    private $userModel;
 
     public function __construct(UserModel $user)
     {
         $this->userModel = $user;
     }
 
-    //TODO implement actions (methods)
-
     public function list(/* Request $request */)
     {
         $users = $this->userModel->getList();
-        ob_start();
-        require __DIR__.'/../../app/view/Users/list.php';
-        $content = ob_get_contents();
-        ob_end_clean();
-        #echo 'list and return Response'.PHP_EOL;
-        return new Response($content);
+        $path = __DIR__.'/../../app/view/Users/list.php';
+
+        return new Response(new TemplateResource($path, ['users' => $users]));
     }
 
     /**
@@ -42,18 +40,43 @@ class UsersController
      */
     public function create(Request $request)
     {
-        if($request->getMethod() === Request::POST){
-            $user = [
-                'login'=>$request->get('login'),
-                'password'=>$request->get('password'),
-                'roles'=>(array)$request->get('roles',[])
-            ];
-            $this->userModel->create($user);
+        $form = new UserForm($this->userModel);
+        if ($request->getMethod() === Request::POST) {
+            $form->handleRequest($request);
+            if ($form->isValid()) {
+                $this->userModel->create($form->getData());
+                print_r($form->getViolations());
+                $this->userModel->create($form->getData());
+
+                return new RedirectResponse('/app.php/users');
+            }
         }
-        ob_start();
-        require __DIR__.'/../../app/view/Users/create.php';
-        $content = ob_get_contents();
-        ob_end_clean();
-        return new Response($content);
+        $path = __DIR__.'/../../app/view/Users/create.php';
+
+        return new Response(new TemplateResource($path, ['form' => $form, 'action' => 'create']));
+    }
+
+    public function edit(Request $request, int $id)
+    {
+        $form = new UserForm($this->userModel, $this->userModel->getUser($id));
+        if ($request->getMethod() === Request::POST) {
+            $form->handleRequest($request);
+            if ($form->isValid()) {
+                $this->userModel->edit($form->getData(), $id);
+
+                return new RedirectResponse('/app.php/users');
+            }
+        }
+        $path = __DIR__.'/../../app/views/User/create.php';
+        $form->action = '/app.php/users/'.$id.'/edit';
+
+        return new Response(new TemplateResource($path, ['form' => $form, 'action' => $id.'/edit']));
+    }
+
+    public function delete(Request $request, int $id)
+    {
+        $this->userModel->delete($id);
+
+        return new RedirectResponse('/app.php/users');
     }
 }

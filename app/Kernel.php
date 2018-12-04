@@ -42,17 +42,11 @@ class Kernel
     {
         $route = $this->getRoute($request);
         $controller = $this->getController($route);
-        $params = $route->getPathValues();
+        $params = $route->getPathValues($request->getPath());
         array_unshift($params,$request);
         return call_user_func_array([$controller, $route->getMethod()], $params);
 
     }
-
-    /*public function getModel(): Model
-    {
-        return new UserModel($this->connection);
-
-    }*/
 
     /**
      * @param $host
@@ -73,8 +67,7 @@ class Kernel
         require_once __DIR__.'/config/routes.php';
         $route = Router::findRoute($request);
         if ($route === null) {
-            //TODO throw exception 404
-            echo 'Kernel_dont_found_route => ERROR '.PHP_EOL;
+            throw new Exception("Route not found");
         }
         return $route;
     }

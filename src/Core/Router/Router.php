@@ -25,11 +25,9 @@ class Router
     {
         foreach (self::$routes as $route) {
             if ($route->match($request->getPath())) {
-                #echo 'findRoute'.PHP_EOL;
                 return $route;
             }
         }
-        #echo 'Router_dont_find_route'.PHP_EOL;
         return null;
     }
 

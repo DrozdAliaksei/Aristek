@@ -27,17 +27,22 @@ class Route
      * @var array
      */
     private $rules;
+    /**
+     * @var string
+     */
+    private $pattern;
 
     /**
      * Route constructor.
      */
-    public function __construct(string $path,string $controllerClass,string $method, array $rules=[])
+    public function __construct(string $path, string $controllerClass, string $method, array $rules = [])
     {
 
         $this->path = $path;
         $this->controllerClass = $controllerClass;
         $this->method = $method;
-        $this->rules = $rules;
+        $this->rules = $this->prepareRules($rules,$path);
+        $this->pattern = $this->createPattern($path, $this->rules);
     }
 
     /**
@@ -45,7 +50,6 @@ class Route
      */
     public function getControllerClass(): string
     {
-        #echo 'RouteGetController'.PHP_EOL;
         return $this->controllerClass;
     }
 
@@ -54,22 +58,46 @@ class Route
      */
     public function getMethod(): string
     {
-        #echo 'RouteGetMethod'.PHP_EOL;
         return $this->method;
     }
 
 
-    public function match(string $path):bool
+    public function match(string $path): bool
     {
-        #echo 'RouteMatch'.PHP_EOL;
-        return $this->path === $path;
+        return preg_match($this->pattern, $path);
     }
 
-    public function getPathValues():array
+    public function getPathValues(string $path): array
     {
-        //preg_match_all;
-        // $^/users/\(\d+)/edit$#i
-        return [];
-        //ToDo implement
+        $matches = [];
+        preg_match($this->pattern, $path, $matches);
+        array_shift($matches);
+        return array_values($matches);
+    }
+
+    private function createPattern(string $path, $rules): string
+    {
+        if ($rules) {
+            $search = array_map(
+                function ($key) {
+                    return sprintf('{%s}', $key);
+                },
+                array_keys($rules)
+            );
+            $replace = array_map(
+                function ($rule) {
+                    return sprintf('(%s)', $rule);
+                },
+                array_values($rules)
+            );
+            $path = str_replace($search, $replace, $path);
+        }
+        return sprintf('~^%s$~', $path);
+    }
+
+    private function prepareRules(array $rules)
+    {
+        //TODo sort rules like in the path найти вхождения вхождения пробежаться и найти как они входят - если есть левые то выдать ошибкуу
+        return $rules;
     }
 }
