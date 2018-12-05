@@ -7,12 +7,14 @@
 <?php
 $form = $this->data['form'];
 if (!$form->isValid()) {
-    foreach ($form->getViolations() as $key => $violation){
+        foreach ($form->getViolations() as $key => $violation){
         echo $key;
         echo $violation.'<br>';
     }
 }
+print_r($form->getData()['roles']);
 ?>
+
 <form method="POST" action="/app.php/users/<?php echo $this->data['action'] ?>">
     <!-- return field value -->
     <input type="text" name="login" placeholder="login" required value="<?php echo $form->getData()['login']; ?>">
@@ -22,7 +24,13 @@ if (!$form->isValid()) {
         <?php foreach (\Enum\RolesEnum::getAll() as $role) { ?>
             <!-- TODO if in array => selected-->
             <option value="<?php echo $role ?>"
-                <?php if (in_array($form->getData()['roles'], $role)) echo 'selected'; ?>>
+                <?php
+                foreach ($form->getData()['roles'] as $role_){
+                    if($role_ === $role){
+                        echo 'selected';
+                    }
+                }
+                ?>>
                 <?php echo $role ?>
             </option>
         <?php } ?>

@@ -28,7 +28,7 @@ class UserModel implements Model
 
     public function getList(): array
     {
-        $sql = "SELECT * FROM users ";
+        $sql = "SELECT * FROM users";
         return $this->connection->fetchAll($sql);
         //ToDo rewrite
     }
@@ -36,7 +36,7 @@ class UserModel implements Model
     public function create(array $user)
     {
         $user['roles'] = json_encode($user['roles']);
-        $sql = "INSERT INTO users  (login,password,roles) 
+        $sql = "INSERT INTO users (login,password,roles) 
                 VALUES (:login,:password,:roles)";
         $this->connection->execute($sql,$user);
 
@@ -48,12 +48,12 @@ class UserModel implements Model
         $this->connection->execute($sql);
     }
 
-    public function edit(array $user)
+    public function edit(array $user , int $id)
     {
         $user['roles'] = json_encode($user['roles']);
-        $sql = "UPDATE users (login,password,roles) 
+        $sql = sprintf("UPDATE users (login,password,roles) 
                 SET (:login,:password,:roles)
-                WHERE id = (:id)";
+                WHERE id = %s" , $id);
         $this->connection->execute($sql,$user);
     }
 

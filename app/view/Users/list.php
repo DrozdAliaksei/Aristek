@@ -17,7 +17,7 @@
             <td><?php echo $user['id'] ?></td>
             <td><?php echo $user['login'] ?></td>
             <td><?php echo $user['password'] ?></td>
-            <td><?php echo implode(', ', json_decode($user['roles'])); ?></td>
+            <td><?php echo implode(', ', json_decode($user['roles'])); ?></td> <!--TODO refact, somthing wrong -->
             <td>
                 <a href="/app.php/users/<?php echo $user['id']; ?>/edit">Edit</a>
                 <a href="/app.php/users/<?php echo $user['id']; ?>/delete">Delete</a>

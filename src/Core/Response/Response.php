@@ -14,6 +14,20 @@ class Response
     const NOT_FOUND = 404;
     const REDIRECT_FOUND = 302;
     const SUCCESS = 200;
+    const CONTINUE = 100;
+    const SWITCHING_PROTOCOL = 101;
+    const ACCEPTED = 202;
+    const NO_CONTENT = 204;
+    const RESET_CONTENT = 205;
+    const PARTIAL_CONTENT = 206;
+    const SEE_OTHER = 300;
+    const NOT_MODIFIED = 304;
+    const USE_PROXY = 305;
+    const BAD_REQUEST = 400;
+    const REQUEST_TIMEOUT = 408;
+    const CONFLICT = 409;
+    const GONE = 410;
+
 
     /**
      * @var ResourceInterface
@@ -56,6 +70,8 @@ class Response
     {
         $message = [
             self::NOT_FOUND => 'NOT FOUND',
+            self::REDIRECT_FOUND => 'REDIRECT FOUND',
+            self::SUCCESS => 'SUCCESS',
             ];
 
         //ToDo fill masages

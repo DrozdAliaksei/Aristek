@@ -16,7 +16,7 @@ class UserForm
 {
 
     private $data;
-    private $voilations = [];
+    private $violations = [];
     private $userModel;
 
     /**
@@ -24,7 +24,7 @@ class UserForm
      * @param UserModel $userModel
      * @param array $user
      */
-    public function __construct(UserModel $userModel,array $data = [])
+    public function __construct(UserModel $userModel, array $data = [])
     {
         $this->userModel = $userModel;
         $this->data['login'] = $data['login'];
@@ -55,7 +55,7 @@ class UserForm
      */
     public function getViolations(): array
     {
-        return $this->voilations;
+        return $this->violations;
     }
 
     /**
@@ -69,7 +69,7 @@ class UserForm
     public function isValid()
     {
         //TODO проверить был ли обработан handlerequest
-        return count($this->voilations) === 0 ;
+        return count($this->violations) === 0 ;
     }
 
 }
