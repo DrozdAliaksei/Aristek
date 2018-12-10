@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title><?php echo isset($this->data['room']) ? 'Edit Room' : 'Create room'; ?></title>
+    <title><?php echo isset($this->data['equipment']) ? 'Edit Equipment' : 'Create equipment'; ?></title>
 </head>
 <body>
-<a href="/app.php/rooms">Rooms list</a>
+<a href="/app.php/equipments">Equipments list</a>
 
-<h1><?php echo isset($this->data['room']) ? 'Edit Room' : 'Create room'; ?></h1>
+<h1><?php echo isset($this->data['equipment']) ? 'Edit Equipment' : 'Create equipment'; ?></h1>
 
 <div class="errors-bl"><?php
     $form = $this->data['form'];

@@ -17,3 +17,8 @@ Router::add('/rooms', \Controller\RoomsController::class, 'list');
 Router::add('/rooms/create', \Controller\RoomsController::class, 'create');
 Router::add('/rooms/{id}/edit', \Controller\RoomsController::class, 'edit', ['id' => '\d+']);
 Router::add('/rooms/{id}/delete', \Controller\RoomsController::class, 'delete', ['id' => '\d+']);
+
+Router::add('/equipments', \Controller\EquipmentsController::class, 'list');
+Router::add('/equipments/create', \Controller\EquipmentsController::class, 'create');
+Router::add('/equipments/{id}/edit', \Controller\EquipmentsController::class, 'edit', ['id' => '\d+']);
+Router::add('/equipments/{id}/delete', \Controller\EquipmentsController::class, 'delete', ['id' => '\d+']);

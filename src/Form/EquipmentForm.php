@@ -3,30 +3,29 @@
  * Created by PhpStorm.
  * User: dii
  * Date: 10.12.18
- * Time: 13:52
+ * Time: 15:49
  */
 
 namespace Form;
 
 use Core\Request\Request;
-use Model\RoomModel;
+use Model\EquipmentModel;
 
-class RoomForm
+class EquipmentForm
 {
-
     private $data;
     private $violations = [];
-    private $roomModel;
+    private $equipmentModel;
 
     /**
      * RoomForm constructor.
-     * @param RoomModel $roomModel
-     * @param array $room
+     * @param EquipmentModel $equipmentModel
+     * @param array $equipments
      */
-    public function __construct(RoomModel $roomModel,array $data =[])
+    public function __construct(EquipmentModel $equipmentModel,array $data =[])
     {
         $this->data = $data;
-        $this->roomModel = $roomModel;
+        $this->equipmentModel = $equipmentModel;
     }
 
     public function handleRequest(Request $request)
@@ -36,10 +35,10 @@ class RoomForm
         $this->data['description'] = $request->get('description');
 
         $id = $this->data['id'] ?? null;
-        if ($this->roomModel->checkName($this->data['name'], $id)) {
+        if ($this->equipmentModel->checkName($this->data['name'], $id)) {
             $this->violations['name'] = 'Such name exists';
         }
-        if (strlen($this->data['description']) < 5) {
+        if (strlen($this->data['description']) < 3) {
             $this->violations['description'] = 'Description is too short';
         }
     }
@@ -62,7 +61,6 @@ class RoomForm
 
     public function isValid()
     {
-        //TODO проверить был ли обработан handlerequest
         return count($this->violations) === 0;
     }
 

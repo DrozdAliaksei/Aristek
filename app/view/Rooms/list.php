@@ -2,7 +2,7 @@
 <html>
 <head></head>
 <body>
-<h1>Users</h1>
+<h1>Rooms</h1>
 <a href="/app.php/rooms/create">Add new room</a>
 <table width="100%" cellspacing="0" style="text-align: center">
     <thead>
