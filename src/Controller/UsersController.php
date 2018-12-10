@@ -51,12 +51,17 @@ class UsersController
         }
         $path = __DIR__.'/../../app/view/Users/create.php';
 
-        return new Response(new TemplateResource($path, ['form' => $form, 'action' => 'create']));
+        return new Response(new TemplateResource($path, ['form' => $form]));
     }
 
-    public function edit(Request $request, int $id)
+    public function edit(Request $request)
     {
-        $form = new UserForm($this->userModel, $this->userModel->getUser($id));
+        $id = $request->get('id');
+        $user = $this->userModel->getUser($id);
+        if($user === null){
+            throw new \Exception('User not found');
+        }
+        $form = new UserForm($this->userModel, $user );
         if ($request->getMethod() === Request::POST) {
             $form->handleRequest($request);
             if ($form->isValid()) {
@@ -66,15 +71,15 @@ class UsersController
             }
         }
         $path = __DIR__.'/../../app/view/Users/create.php';
-       // $form->action = '/app.php/users/'.$id.'/edit';
 
-        return new Response(new TemplateResource($path, ['form' => $form, 'action' => $id.'/edit']));
+        return new Response(new TemplateResource($path, ['form' => $form, 'user' => $user]));
     }
 
-    public function delete(Request $request, int $id)
+    public function delete(Request $request)
     {
+        $id = $request->get('id');
+ //TODO throw exception if useer not exist
         $this->userModel->delete($id);
-
         return new RedirectResponse('/app.php/users');
     }
 }

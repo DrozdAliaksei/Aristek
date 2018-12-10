@@ -41,7 +41,7 @@ class Route
         $this->path = $path;
         $this->controllerClass = $controllerClass;
         $this->method = $method;
-        $this->rules = $this->prepareRules($rules,$path);
+        $this->rules = $this->prepareRules($rules, $path);
         $this->pattern = $this->createPattern($path, $this->rules);
     }
 
@@ -69,10 +69,13 @@ class Route
 
     public function getPathValues(string $path): array
     {
-        $matches = [];
-        preg_match($this->pattern, $path, $matches);
-        array_shift($matches);
-        return array_values($matches);
+        $values = [];
+        preg_match_all($this->pattern, $path, $matches);
+        if(count($matches) > 1){
+            $values = array_combine(array_keys($this->rules),$matches[1]) ;
+        }
+
+        return $values;
     }
 
     private function createPattern(string $path, $rules): string
@@ -92,12 +95,20 @@ class Route
             );
             $path = str_replace($search, $replace, $path);
         }
+
         return sprintf('~^%s$~', $path);
     }
 
-    private function prepareRules(array $rules)
+    private function prepareRules(array $rules, string $path)
     {
-        //TODo sort rules like in the path найти вхождения вхождения пробежаться и найти как они входят - если есть левые то выдать ошибкуу
-        return $rules;
+        $gaps = [];
+        if (preg_match_all('#\{(\w+)\}#', $path, $matches)) {
+            $gaps = $matches[1];
+        }
+        if (array_diff(array_keys($rules), $gaps)) {
+            throw new \Exception('Invalid route rules configuration');
+        }
+        return array_merge( array_fill_keys($gaps,'\w+'),$rules);
+
     }
 }

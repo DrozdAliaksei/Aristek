@@ -10,8 +10,6 @@ namespace Core\Response;
 
 class RedirectResponse extends Response
 {
-    private $url;
-
     /**
      * Response constructor.
      * @param $content

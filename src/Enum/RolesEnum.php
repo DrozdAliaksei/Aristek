@@ -12,11 +12,11 @@ namespace Enum;
 final class RolesEnum
 {
     const ADMIN = 'admin';
-    const GUEST = 'guest';
+    const VISITOR = 'visitor';
     const USER = 'user';
 
     public static function getAll(): array
     {
-        return [self::ADMIN, self::GUEST, self::USER];
+        return [self::ADMIN, self::VISITOR, self::USER];
     }
 }

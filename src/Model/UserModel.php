@@ -29,8 +29,14 @@ class UserModel implements Model
     public function getList(): array
     {
         $sql = "SELECT * FROM users";
-        return $this->connection->fetchAll($sql);
-        //ToDo rewrite
+        $users = $this->connection->fetchAll($sql);
+        $users = array_map(function (array $user) {
+            $user['roles'] = json_decode($user['roles']);
+
+            return $user;
+        }, $users);
+
+        return $users;
     }
 
     public function create(array $user)
@@ -38,36 +44,43 @@ class UserModel implements Model
         $user['roles'] = json_encode($user['roles']);
         $sql = "INSERT INTO users (login,password,roles) 
                 VALUES (:login,:password,:roles)";
-        $this->connection->execute($sql,$user);
+        $this->connection->execute($sql, $user);
 
     }
 
-    public function delete($params)
+    public function delete(int $id)
     {
-        $sql = sprintf('DELETE FROM users WHERE id = %s', $params);
-        $this->connection->execute($sql);
+        $sql = 'DELETE FROM users WHERE id = :id';
+        $this->connection->execute($sql, ['id' => $id]);
     }
 
-    public function edit(array $user , int $id)
+    public function edit(array $user, int $id)
     {
+        $user['id'] = $id;
         $user['roles'] = json_encode($user['roles']);
-        $sql = sprintf("UPDATE users (login,password,roles) 
-                SET (:login,:password,:roles)
-                WHERE id = %s" , $id);
-        $this->connection->execute($sql,$user);
+        $sql = 'UPDATE users SET login=:login,password=:password,roles=:roles WHERE id=:id';
+        $this->connection->execute($sql, $user);
     }
 
-    public function checkLogin (string $login)
+    public function checkLogin(string $login, int $id = null): bool
     {
-        $sql = sprintf("select login from users where login='%s'", $login);
-        $login_ = $this->connection->fetchAll($sql);
-        if (count($login_) === 0) return false;
-        return true;
+        $properties = ['login' => $login];
+        if (null === $id) {
+            $sql = 'select id from users where login=:login';
+        } else {
+            $sql = 'select id from users where login=:login and id != :id';
+            $properties['id'] = $id;
+        }
+
+        return (bool)$this->connection->fetch($sql, $properties, \PDO::FETCH_COLUMN);
     }
-    public function getUser(int $id)
+
+    public function getUser(int $id): array
     {
-        $sql = sprintf('select * from users where id = %s', $id);
-        $user = $this->connection->fetchAll($sql);
-        return $user[0];
+        $sql = 'select * from users where id = :id';
+        $user = $this->connection->fetch($sql, ['id' => $id]);
+        $user['roles'] = json_decode($user['roles']);
+
+        return $user;
     }
 }

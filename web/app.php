@@ -19,3 +19,6 @@ try {
 } catch (\Exception $exception) {
     echo $exception->getMessage();
 }
+//ToDo 1)авторизация через сессию   ,работа с сессиями на php.net
+//TODO 2) меню,
+//TODO 3)приложение через основные части

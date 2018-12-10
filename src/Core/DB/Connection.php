@@ -23,22 +23,37 @@ class Connection
     {
         $pdo = new \PDO(sprintf($database['dsn']), sprintf($database['user']), sprintf($database['password']));
         $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        $this->pdo = $pdo;}
+        $this->pdo = $pdo;
+    }
+
+    /**
+     * @param string $sql
+     * @param array|null $properties
+     * @param int $fetchStyle
+     * @return mixed
+     */
+    public function fetch(string $sql, array $properties = null, $fetchStyle = \PDO::FETCH_ASSOC)
+    {
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute($properties);
+
+        return $statement->fetch($fetchStyle);
+    }
 
     /**
      * @param string $sql
      * @param array|null $properties
      * @return array
      */
-    public function fetchAll(string $sql, array $properties = null): array
+    public function fetchAll(string $sql, array $properties = null, $fetchStyle = \PDO::FETCH_ASSOC): array
     {
         $statement = $this->pdo->prepare($sql);
         $statement->execute($properties);
 
-        return $statement->fetchAll(\PDO::FETCH_ASSOC);
+        return $statement->fetchAll($fetchStyle);
     }
 
-    public function execute(string $sql,array $properties = null)
+    public function execute(string $sql, array $properties = null)
     {
         $statement = $this->pdo->prepare($sql);
         $statement->execute($properties);

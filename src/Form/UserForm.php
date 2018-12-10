@@ -9,6 +9,7 @@
 namespace Form;
 
 use Core\Request\Request;
+use Enum\RolesEnum;
 use Model\UserModel;
 
 
@@ -27,26 +28,29 @@ class UserForm
     public function __construct(UserModel $userModel, array $data = [])
     {
         $this->userModel = $userModel;
-        $this->data['login'] = $data['login'];
-        $this->data['password'] = $data['password'];
-        $this->data['roles'] = $data['roles'];
+        $this->data = $data;
     }
 
     public function handleRequest(Request $request)
     {
-        $this->data = [
-            'login' => $request->get('login'),
-            'password' => $request->get('password'),
-            'roles' => (array)$request->get('roles', [])
-        ];
-        if ($this->userModel->checkLogin($this->data['login'])) {
-            $this->violations['login_error: '] = 'such login exists';
+
+        $this->data['login'] = $request->get('login');
+        $this->data['password'] = $request->get('password');
+        $this->data['roles'] = (array)$request->get('roles', []);
+
+        $id = $this->data['id'] ?? null;
+        if ($this->userModel->checkLogin($this->data['login'], $id)) {
+            $this->violations['login'] = 'Such login exists';
         }
         if (strlen($this->data['password']) < 5) {
-            $this->violations['password_error: '] = 'password is too short';
+            $this->violations['password'] = 'Password is too short';
+        } elseif (strlen($this->data['password']) > 30) {
+            $this->violations['password'] = 'Password is too long';
         }
-        elseif (strlen($this->data['password']) > 30) {
-            $this->violations['password_error: '] = 'password is too long';
+        if (!$this->data['roles']) {
+            $this->violations['roles'] = 'At least, one role is required';
+        } elseif (array_diff($this->data['roles'], RolesEnum::getAll())) {
+            $this->violations['roles'] = 'Invalid roles';
         }
     }
 
@@ -69,7 +73,7 @@ class UserForm
     public function isValid()
     {
         //TODO проверить был ли обработан handlerequest
-        return count($this->violations) === 0 ;
+        return count($this->violations) === 0;
     }
 
 }

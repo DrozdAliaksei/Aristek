@@ -22,6 +22,7 @@ class Request
      */
     private $path;
     private $method;
+    private $attributes;
 
     /**
      * Request constructor.
@@ -56,6 +57,14 @@ class Request
 
     public function get(string $key, $default = null)
     {
+        if(array_key_exists($key, $this->attributes)){
+            return $this->attributes[$key];
+        }
         return $this->request[$key] ?? $default;
+    }
+
+    public function setAttributes(array $attributes)
+    {
+        $this->attributes = $attributes;
     }
 }

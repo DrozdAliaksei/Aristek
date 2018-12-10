@@ -43,19 +43,10 @@ class Kernel
         $route = $this->getRoute($request);
         $controller = $this->getController($route);
         $params = $route->getPathValues($request->getPath());
-        array_unshift($params,$request);
-        return call_user_func_array([$controller, $route->getMethod()], $params);
+        $request->setAttributes($params);
 
-    }
+        return call_user_func([$controller, $route->getMethod()], $request);
 
-    /**
-     * @param $host
-     * @param $db
-     * @return string
-     */
-    private function getDSN(array $config): string
-    {
-        return sprintf("mysql:host=%s;dbname=%s", $config['host'], $config['database']);
     }
 
     /**
