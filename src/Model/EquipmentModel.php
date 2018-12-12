@@ -75,4 +75,12 @@ class EquipmentModel
 
         return $equipment;
     }
+
+    public function getEquipments() : array
+    {
+        $sql = 'SELECT id,name FROM equipments';
+        $equipments = $this->connection->fetchAll($sql);
+
+        return $equipments;
+    }
 }

@@ -75,4 +75,11 @@ class RoomModel implements Model
 
         return $room;
     }
+
+    public function getRooms(): array
+    {
+        $sql = 'SELECT id,name FROM rooms';
+
+        return $this->connection->fetchAll($sql);
+    }
 }

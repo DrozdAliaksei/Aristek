@@ -15,7 +15,7 @@ class InstallationSchemeForm
 {
     private $data;
     private $violations = [];
-    private $userModel;
+    private $schemeModel;
 
     /**
      * UserForm constructor.
@@ -34,6 +34,14 @@ class InstallationSchemeForm
     public function getViolations(): array
     {
         return $this->violations;
+    }
+
+    /**
+     * @return InstallationSchemeModel
+     */
+    public function getModel(): InstallationSchemeModel
+    {
+        return $this->schemeModel;
     }
 
     /**

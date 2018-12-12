@@ -6,7 +6,6 @@
 <a href="/app.php/installation_scheme/create">Add new scheme</a>
 <table width="100%" cellspacing="0" style="text-align: center">
     <thead>
-    <?php print_r($this->data['schems']); ?>
     <tr>
         <th>Id</th>
         <th>Room</th>
@@ -21,8 +20,8 @@
     <?php foreach ($this->data['schems'] as $scheme) { ?>
         <tr>
             <td><?php echo $scheme['id'] ?></td>
-            <td><?php echo $scheme['room'] ?></td>
-            <td><?php echo $scheme['equipments.id'] ?></td>
+            <td><?php echo $scheme['room_name'] ?></td>
+            <td><?php echo $scheme['equipment_name'] ?></td>
             <td><?php echo $scheme['displayable_name'] ?></td>
             <td><?php if($scheme['status'] == 1){echo "On";}else{echo "Off";} ?></td>
             <td><?php echo $scheme['role'] ?></td>
