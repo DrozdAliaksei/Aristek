@@ -33,12 +33,18 @@ class InstallationSchemeModel
         INNER JOIN rooms ON installation_scheme.room_id = rooms.id
         INNER JOIN equipments ON installation_scheme.equipment_id = equipments.id";
         $schems = $this->connection->fetchAll($sql);
+        $schems = array_map(function (array $scheme) {
+            $scheme['role'] = json_decode($scheme['role']);
+
+            return $scheme;
+        }, $schems);
 
         return $schems;
     }
 
     public function create(array $scheme)
     {
+        $scheme['role'] = json_encode($scheme['role']);
         $sql = "INSERT INTO installation_scheme (room_id, equipment_id, displayable_name, status, role) 
                 VALUES (:room_id,:equipment_id,:displayable_name, :status, :role)";
         $this->connection->execute($sql, $scheme);
@@ -55,19 +61,21 @@ class InstallationSchemeModel
     public function edit(array $scheme, int $id)
     {
         $scheme['id'] = $id;
+        $scheme['role'] = json_encode($scheme['role']);
         $sql = 'UPDATE installation_scheme 
                 SET room_id=:room_id,equipment_id=:equipment_id,displayable_name=:displayable_name,status=:status,role=:role 
                 WHERE id=:id';
         $this->connection->execute($sql, $scheme);
     }
 
-    public function check(string $smth, int $id = null): bool
+    public function checkScheme(string $room_id, string $equipment_id, int $id = null): bool
     {
-        $properties = ['smth' => $smth];
+        $properties = ['room_id' => $room_id,'equipment_id' => $equipment_id];
+
         if (null === $id) {
-            $sql = 'select id from installation_scheme where smth=:smth';
+            $sql = 'select id from installation_scheme where room_id=:room_id and equipment_id=:equipment_id';
         } else {
-            $sql = 'select id from installation_scheme where smth=:smth and id != :id';
+            $sql = 'select id from installation_scheme where room_id=:room_id and equipment_id=:equipment_id and id != :id';
             $properties['id'] = $id;
         }
 
@@ -78,7 +86,9 @@ class InstallationSchemeModel
     {
         $sql = 'select * from installation_scheme where id = :id';
         $scheme = $this->connection->fetch($sql, ['id' => $id]);
-
+        if ($scheme) {
+            $scheme['role'] = json_decode($scheme['role']);
+        }
         return $scheme;
     }
 }

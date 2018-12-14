@@ -24,7 +24,7 @@
             <td><?php echo $scheme['equipment_name'] ?></td>
             <td><?php echo $scheme['displayable_name'] ?></td>
             <td><?php if($scheme['status'] == 1){echo "On";}else{echo "Off";} ?></td>
-            <td><?php echo $scheme['role'] ?></td>
+            <td><?php echo implode(', ', $scheme['role']); ?></td>
             <td>
                 <a href="/app.php/installation_scheme/<?php echo $scheme['id']; ?>/edit">Edit</a>
                 <a href="/app.php/installation_scheme/<?php echo $scheme['id']; ?>/delete">Delete</a>

@@ -35,17 +35,20 @@ class UserForm
     {
 
         $this->data['login'] = $request->get('login');
-        $this->data['password'] = $request->get('password');
+        $this->data['plain_password'] = $request->get('plain_password');
+        $this->data['plain_password_confirm'] = $request->get('plain_password_confirm');
         $this->data['roles'] = (array)$request->get('roles', []);
 
         $id = $this->data['id'] ?? null;
         if ($this->userModel->checkLogin($this->data['login'], $id)) {
             $this->violations['login'] = 'Such login exists';
         }
-        if (strlen($this->data['password']) < 5) {
-            $this->violations['password'] = 'Password is too short';
-        } elseif (strlen($this->data['password']) > 30) {
-            $this->violations['password'] = 'Password is too long';
+        if (strlen($this->data['plain_password']) < 5) {
+            $this->violations['plain_password'] = 'Password is too short';
+        } elseif (strlen($this->data['plain_password']) > 30) {
+            $this->violations['plain_password'] = 'Password is too long';
+        } elseif ($this->data['plain_password'] !== $this->data['plain_password_confirm']) {
+            $this->violations['plain_password_confirm'] = 'Password conformation doesn\'t match password';
         }
         if (!$this->data['roles']) {
             $this->violations['roles'] = 'At least, one role is required';
@@ -67,7 +70,9 @@ class UserForm
      */
     public function getData(): array
     {
-        return $this->data;
+        $data = $this->data;
+        unset($data['plain_password_confirm']);
+        return $data;
     }
 
     public function isValid()

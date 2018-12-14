@@ -8,6 +8,8 @@
 
 use Core\Router\Router;
 
+Router::add('/login', \Controller\SecurityController::class, 'login');
+Router::add('/logout', \Controller\SecurityController::class, 'logout');
 Router::add('/users', \Controller\UsersController::class, 'list');
 Router::add('/users/create', \Controller\UsersController::class, 'create');
 Router::add('/users/{id}/edit', \Controller\UsersController::class, 'edit', ['id' => '\d+']);
