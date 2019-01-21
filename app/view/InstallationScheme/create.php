@@ -48,15 +48,13 @@
         <option value=""></option>
         <?php foreach (\Enum\StatusEnum::getAll() as $status) { ?>
             <!-- TODO if in array => selected-->
-            <option value="<?php echo $status ?>"
+            <option value="<?php echo $status[1] ?>"
                 <?php
-                    if ($form->getData['status'] == 1 && $status == 'On') {
-                        echo 'selected';
-                    }elseif ($form->getData['status'] == 0 && $status === 'Off'){
+                    if ($form->getData()['status'] == $status[1]) {
                         echo 'selected';
                     }
                 ?>>
-                <?php echo $status ?>
+                <?php echo $status[0] ?>
             </option>
         <?php } ?>
     </select>

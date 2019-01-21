@@ -11,8 +11,8 @@ namespace Enum;
 
 final class StatusEnum
 {
-    const On = 'On';
-    const Off = 'Off';
+    const On = ['On', 1];
+    const Off = ['Off', 0];
 
     public static function getAll(): array
     {
