@@ -29,3 +29,4 @@ Router::add('/installation_scheme', \Controller\InstallationSchemeController::cl
 Router::add('/installation_scheme/create', \Controller\InstallationSchemeController::class, 'create');
 Router::add('/installation_scheme/{id}/edit', \Controller\InstallationSchemeController::class, 'edit', ['id' => '\d+']);
 Router::add('/installation_scheme/{id}/delete', \Controller\InstallationSchemeController::class, 'delete', ['id' => '\d+']);
+Router::add('/installation_scheme/{id}/{status}/change_status', \Controller\InstallationSchemeController::class, 'changeStatus', ['id' => '\d+','status' => '\d+']);

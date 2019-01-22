@@ -47,7 +47,6 @@
     <select title="status" name="status" required>
         <option value=""></option>
         <?php foreach (\Enum\StatusEnum::getAll() as $status) { ?>
-            <!-- TODO if in array => selected-->
             <option value="<?php echo $status[1] ?>"
                 <?php
                     if ($form->getData()['status'] == $status[1]) {
@@ -61,7 +60,7 @@
     <select name="role[]" multiple required>
         <option value=""></option>
         <?php foreach (\Enum\RolesEnum::getAll() as $role) { ?>
-            <!-- TODO if in array => selected-->
+
             <option value="<?php echo $role ?>"
                 <?php
                 foreach ($form->getData()['role'] as $role_) {

@@ -62,7 +62,6 @@ class RoomForm
 
     public function isValid()
     {
-        //TODO проверить был ли обработан handlerequest
         return count($this->violations) === 0;
     }
 

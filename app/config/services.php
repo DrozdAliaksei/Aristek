@@ -2,7 +2,7 @@
 
 return [
     \Controller\SecurityController::class => [\Service\SecurityService::class,\Core\HTTP\SessionProvider::class],
-    \Controller\UsersController::class => [\Model\UserModel::class],
+    \Controller\UsersController::class => [\Model\UserModel::class,\Core\HTTP\SessionProvider::class],
     \Controller\RoomsController::class => [\Model\RoomModel::class],
     \Controller\EquipmentsController::class => [\Model\EquipmentModel::class],
     \Controller\InstallationSchemeController::class => [

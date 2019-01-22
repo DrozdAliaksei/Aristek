@@ -23,14 +23,13 @@
     <select name="roles[]" multiple required>
         <option value=""></option>
         <?php foreach (\Enum\RolesEnum::getAll() as $role) { ?>
-            <!-- TODO if in array => selected-->
             <option value="<?php echo $role ?>"
                 <?php
                 foreach ($form->getData()['roles'] as $role_) {
                     if ($role_ === $role) {
                         echo 'selected';
                     }
-                }  //TODO dont work multiple selection in create
+                }
                 ?>>
                 <?php echo $role ?>
             </option>

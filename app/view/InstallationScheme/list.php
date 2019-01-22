@@ -26,6 +26,7 @@
             <td><?php if($scheme['status'] == 1 ){echo "On";}else{echo "Off";} ?></td>
             <td><?php echo implode(', ', $scheme['role']); ?></td>
             <td>
+                <a href="/app.php/installation_scheme/<?php echo $scheme['id']; ?>/<?php echo $scheme['status']; ?>/change_status">Change Status</a>
                 <a href="/app.php/installation_scheme/<?php echo $scheme['id']; ?>/edit">Edit</a>
                 <a href="/app.php/installation_scheme/<?php echo $scheme['id']; ?>/delete">Delete</a>
             </td>

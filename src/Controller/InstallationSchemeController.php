@@ -98,4 +98,12 @@ class InstallationSchemeController
         $this->schemeModel->delete($id);
         return new RedirectResponse('/app.php/installation_scheme');
     }
+
+    public function changeStatus(Request $request)
+    {
+        $id = $request->get('id');
+        $status = $request->get('status');
+        $this->schemeModel->changeStatus($id,$status);
+        return new RedirectResponse('/app.php/installation_scheme');
+    }
 }

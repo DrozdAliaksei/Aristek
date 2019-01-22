@@ -8,6 +8,7 @@
 
 namespace Controller;
 
+use Core\HTTP\Session;
 use Core\Response\EmptyResource;
 use Core\Response\RedirectResponse;
 use Core\Response\Response;
@@ -22,14 +23,35 @@ class UsersController
      * @var UserModel
      */
     private $userModel;
+    /**
+     * @var Session
+     */
+    private $session;
 
-    public function __construct(UserModel $user)
+    public function __construct(UserModel $user, Session $session)
     {
         $this->userModel = $user;
+        $this->session = $session;
     }
 
     public function list(/* Request $request */)
     {
+        $user = $this->session->get('user');
+        echo json_encode($this->session->get('user'));
+/*
+        foreach ($user['roles'] as $role){
+            if($role == 'Admin'){
+                $users = $this->userModel->getList();
+                $path = __DIR__.'/../../app/view/Users/list.php';
+                return new Response(new TemplateResource($path, ['users' => $users]));
+                break;
+            }elseif ($role == 'User'){
+                $users = $this->userModel->getList( ); // maybe show all list, and only for visitors don't show at all and redirect with violation
+                $path = __DIR__.'/../../app/view/Users/list.php';
+                return new Response(new TemplateResource($path, ['users' => $users]));
+            }
+        }
+*/  //TODO think about showing list to all users or just for admin!
         $users = $this->userModel->getList();
         $path = __DIR__.'/../../app/view/Users/list.php';
         return new Response(new TemplateResource($path, ['users' => $users]));
@@ -78,7 +100,6 @@ class UsersController
     public function delete(Request $request)
     {
         $id = $request->get('id');
- //TODO throw exception if useer not exist
         $this->userModel->delete($id);
         return new RedirectResponse('/app.php/users');
     }

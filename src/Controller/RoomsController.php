@@ -79,7 +79,6 @@ class RoomsController
     public function delete(Request $request)
     {
         $id = $request->get('id');
- //TODO throw exception if useer not exist
         $this->roomModel->delete($id);
         return new RedirectResponse('/app.php/rooms');
     }

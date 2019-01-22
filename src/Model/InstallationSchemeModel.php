@@ -91,4 +91,17 @@ class InstallationSchemeModel
         }
         return $scheme;
     }
+
+    public function changeStatus(int $id, int $status)
+    {
+        if($status === 1){
+            $status = 0;
+        }else{
+            $status = 1;
+        }
+        $sql = 'UPDATE installation_scheme
+                SET status =:status 
+                WHERE id = :id';
+        $this->connection->execute($sql, ['id' => $id, 'status' => $status]);
+    }
 }
