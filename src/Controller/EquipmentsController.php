@@ -46,7 +46,7 @@ class EquipmentsController
             if ($form->isValid()) {
                 print_r($form->getViolations());
                 $this->equipmentModel->create($form->getData());
-                return new RedirectResponse('/app.php/equipments');
+                return new RedirectResponse('/equipments');
             }
         }
         $path = __DIR__.'/../../app/view/Equipments/create.php';
@@ -67,7 +67,7 @@ class EquipmentsController
             if ($form->isValid()) {
                 $this->equipmentModel->edit($form->getData(), $id);
 
-                return new RedirectResponse('/app.php/equipments');
+                return new RedirectResponse('/equipments');
             }
         }
         $path = __DIR__.'/../../app/view/Equipments/create.php';
@@ -79,6 +79,6 @@ class EquipmentsController
     {
         $id = $request->get('id');
         $this->equipmentModel->delete($id);
-        return new RedirectResponse('/app.php/equipments');
+        return new RedirectResponse('/equipments');
     }
 }

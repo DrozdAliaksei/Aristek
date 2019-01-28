@@ -33,11 +33,14 @@ class InstallationSchemeModel
         INNER JOIN rooms ON installation_scheme.room_id = rooms.id
         INNER JOIN equipments ON installation_scheme.equipment_id = equipments.id";
         $schems = $this->connection->fetchAll($sql);
-        $schems = array_map(function (array $scheme) {
-            $scheme['role'] = json_decode($scheme['role']);
+        $schems = array_map(
+            function (array $scheme) {
+                $scheme['role'] = json_decode($scheme['role']);
 
-            return $scheme;
-        }, $schems);
+                return $scheme;
+            },
+            $schems
+        );
 
         return $schems;
     }
@@ -70,7 +73,7 @@ class InstallationSchemeModel
 
     public function checkScheme(string $room_id, string $equipment_id, int $id = null): bool
     {
-        $properties = ['room_id' => $room_id,'equipment_id' => $equipment_id];
+        $properties = ['room_id' => $room_id, 'equipment_id' => $equipment_id];
 
         if (null === $id) {
             $sql = 'select id from installation_scheme where room_id=:room_id and equipment_id=:equipment_id';
@@ -89,19 +92,38 @@ class InstallationSchemeModel
         if ($scheme) {
             $scheme['role'] = json_decode($scheme['role']);
         }
+
         return $scheme;
     }
 
     public function changeStatus(int $id, int $status)
     {
-        if($status === 1){
+        if ($status === 1) {
             $status = 0;
-        }else{
+        } else {
             $status = 1;
         }
         $sql = 'UPDATE installation_scheme
                 SET status =:status 
-                WHERE id = :id';
+                WHERE id =:id';
         $this->connection->execute($sql, ['id' => $id, 'status' => $status]);
+    }
+
+    public function getSchemesAvailableToRoles(array $roles): array
+    {
+        if (in_array('admin',$roles)) {
+            return $this->getList();
+        } else {
+            $schemes = $this->getList();
+            $result = [];
+            foreach ($schemes as $scheme) {
+                $acces = array_intersect($roles, $scheme['role']);
+                if (count($acces) > 0) {
+                    $result[] = $scheme;
+                }
+            }
+
+            return $result;
+        }
     }
 }

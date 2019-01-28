@@ -52,7 +52,7 @@ class UsersController
             }
         }
 */  //TODO think about showing list to all users or just for admin!
-        $users = $this->userModel->getList();
+        $users = $this->userModel->getList(); //TODO создать метод в модели getUsersVisibleforRoles передать роли текущего пользователя вывести список пользователей который
         $path = __DIR__.'/../../app/view/Users/list.php';
         return new Response(new TemplateResource($path, ['users' => $users]));
     }
@@ -68,7 +68,7 @@ class UsersController
             if ($form->isValid()) {
                 print_r($form->getViolations());
                 $this->userModel->create($form->getData());
-                return new RedirectResponse('/app.php/users');
+                return new RedirectResponse('/users');
             }
         }
         $path = __DIR__.'/../../app/view/Users/create.php';
@@ -89,7 +89,7 @@ class UsersController
             if ($form->isValid()) {
                 $this->userModel->edit($form->getData(), $id);
 
-                return new RedirectResponse('/app.php/users');
+                return new RedirectResponse('/users');
             }
         }
         $path = __DIR__.'/../../app/view/Users/create.php';
@@ -101,6 +101,6 @@ class UsersController
     {
         $id = $request->get('id');
         $this->userModel->delete($id);
-        return new RedirectResponse('/app.php/users');
+        return new RedirectResponse('/users');
     }
 }

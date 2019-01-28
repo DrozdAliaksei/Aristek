@@ -8,6 +8,7 @@
 
 namespace Controller;
 
+use Core\HTTP\Session;
 use Core\Response\EmptyResource;
 use Core\Response\RedirectResponse;
 use Core\Response\Response;
@@ -32,18 +33,26 @@ class InstallationSchemeController
      * @var EquipmentModel
      */
     private $equipmentModel;
+    /**
+     * @var Session
+     */
+    private $session;
 
 
-    public function __construct(InstallationSchemeModel $schemeModel, RoomModel $roomModel, EquipmentModel $equipmentModel)
+    public function __construct(InstallationSchemeModel $schemeModel, RoomModel $roomModel, EquipmentModel $equipmentModel, Session $session)
     {
         $this->schemeModel = $schemeModel;
         $this->roomModel = $roomModel;
         $this->equipmentModel = $equipmentModel;
+        $this->session = $session;
     }
 
     public function list(/* Request $request */)
     {
-        $schems = $this->schemeModel->getList();
+        //echo  json_encode($this->session->get('user'));
+        $roles = $this->session->get('user')['roles'];
+        //$schems = $this->schemeModel->getList();
+        $schems = $this->schemeModel->getSchemesAvailableToRoles($roles);
         $path = __DIR__.'/../../app/view/InstallationScheme/list.php';
         return new Response(new TemplateResource($path, ['schems' => $schems]));
     }
@@ -59,7 +68,7 @@ class InstallationSchemeController
             if ($form->isValid()) {
                 print_r($form->getViolations());
                 $this->schemeModel->create($form->getData());
-                return new RedirectResponse('/app.php/installation_scheme');
+                return new RedirectResponse('/installation_scheme');
             }
         }
         $path = __DIR__.'/../../app/view/InstallationScheme/create.php';
@@ -82,7 +91,7 @@ class InstallationSchemeController
             if ($form->isValid()) {
                 $this->schemeModel->edit($form->getData(), $id);
 
-                return new RedirectResponse('/app.php/installation_scheme');
+                return new RedirectResponse('/installation_scheme');
             }
         }
         $path = __DIR__.'/../../app/view/InstallationScheme/create.php';
@@ -96,7 +105,7 @@ class InstallationSchemeController
     {
         $id = $request->get('id');
         $this->schemeModel->delete($id);
-        return new RedirectResponse('/app.php/installation_scheme');
+        return new RedirectResponse('/installation_scheme');
     }
 
     public function changeStatus(Request $request)
@@ -104,6 +113,6 @@ class InstallationSchemeController
         $id = $request->get('id');
         $status = $request->get('status');
         $this->schemeModel->changeStatus($id,$status);
-        return new RedirectResponse('/app.php/installation_scheme');
+        return new RedirectResponse('/installation_scheme');
     }
 }

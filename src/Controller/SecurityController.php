@@ -46,7 +46,7 @@ class SecurityController
             if ($form->isValid()) {
                 $this->securityService->authorize($form->getData());
 
-                return new RedirectResponse('/app.php');
+                return new RedirectResponse('/installation_scheme');
             }
         }
         $path = __DIR__.'/../../app/view/Users/login.php';
@@ -58,6 +58,6 @@ class SecurityController
     {
         $this->securityService->logout();
 
-        return new RedirectResponse('/app.php');
+        return new RedirectResponse('/installation_scheme');
     }
 }

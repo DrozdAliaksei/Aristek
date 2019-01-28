@@ -23,7 +23,8 @@ class RequestFactory
     private static function getPath() :string
     {
         #echo $_SERVER['PATH_INFO'].PHP_EOL;
-            return $_SERVER['PATH_INFO'];
+            //return $_SERVER['PATH_INFO'];
+        return $_SERVER['REQUEST_URI'];
     }
 
     private static function getRequest(): array

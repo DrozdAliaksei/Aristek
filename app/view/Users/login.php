@@ -4,7 +4,7 @@
     <title>Authorization</title>
 </head>
 <body>
-<a href="/app.php">Main page</a>
+<a href="/installation_scheme">Installation schems</a>
 
 <h1>Login</h1>
 

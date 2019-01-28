@@ -12,7 +12,8 @@ return [
             'dsn' => 'mysql:host=localhost; dbname=basic',
             'user' => 'root',
             'password' => '1967',
-        ]
+        ],
+        'security' => require __DIR__.'/security.php',
     ],
-    'services' => require_once __DIR__ . '/services.php',
+    'services' => require __DIR__ . '/services.php',
 ];

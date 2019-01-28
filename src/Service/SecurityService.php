@@ -77,4 +77,12 @@ class SecurityService
 
         return $hash === $hashPart;
     }
+
+    public function getRoles(): array
+    {
+        if($this->isAuthirized()){
+           return $this->session->get('user')['roles'];
+        }
+        return [];
+    }
 }

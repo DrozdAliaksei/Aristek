@@ -9,8 +9,12 @@ return [
         \Model\InstallationSchemeModel::class,
         \Model\RoomModel::class,
         \Model\EquipmentModel::class,
+        \Core\HTTP\SessionProvider::class
     ],
     \Core\DB\Connection::class => ['%database%'],
+    \Core\Security\Guardian::class => [\Middleware\GuestMiddleware::class,\Middleware\RoleMiddleware::class],
+    \Middleware\GuestMiddleware::class => [\Service\SecurityService::class],
+    \Middleware\RoleMiddleware::class => ['%security%', \Service\SecurityService::class],
     \Model\UserModel::class => [
         \Core\DB\Connection::class,
         \Core\Security\PasswordHelper::class,
@@ -24,5 +28,4 @@ return [
         \Model\UserModel::class,
         \Core\Security\PasswordHelper::class,
     ],
-
 ];

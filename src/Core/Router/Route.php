@@ -70,11 +70,12 @@ class Route
     public function getPathValues(string $path): array
     {
         $values = [];
-        preg_match_all($this->pattern, $path, $matches);
+        preg_match($this->pattern, $path, $matches);
         if(count($matches) > 1){
-            $values = array_combine(array_keys($this->rules),$matches[1]) ;
+            array_shift($matches);
+            $values = array_combine(array_keys($this->rules),$matches) ;
         }
-
+        //echo json_encode(['values'=>$values, 'rules' => $this->rules, 'matches'=> $matches]);
         return $values;
     }
 

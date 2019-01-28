@@ -11,6 +11,7 @@ use Core\Request\Request;
 use Core\Response\Response;
 use Core\Router\Route;
 use Core\Router\Router;
+use Core\Security\Guardian;
 
 class Kernel
 {
@@ -41,6 +42,11 @@ class Kernel
     public function createResponse(Request $request): Response
     {
         $route = $this->getRoute($request);
+        /** @var Guardian $guardian */
+        $guardian = $this->container->get(Guardian::class);
+        if ($response = $guardian->handle($route, $request)) {
+            return $response;
+        }
         $controller = $this->getController($route);
         $params = $route->getPathValues($request->getPath());
         $request->setAttributes($params);
@@ -60,6 +66,7 @@ class Kernel
         if ($route === null) {
             throw new Exception("Route not found");
         }
+
         return $route;
     }
 

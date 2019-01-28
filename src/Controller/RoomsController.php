@@ -47,7 +47,7 @@ class RoomsController
             if ($form->isValid()) {
                 print_r($form->getViolations());
                 $this->roomModel->create($form->getData());
-                return new RedirectResponse('/app.php/rooms');
+                return new RedirectResponse('/rooms');
             }
         }
         $path = __DIR__.'/../../app/view/Rooms/create.php';
@@ -68,7 +68,7 @@ class RoomsController
             if ($form->isValid()) {
                 $this->roomModel->edit($form->getData(), $id);
 
-                return new RedirectResponse('/app.php/rooms');
+                return new RedirectResponse('/rooms');
             }
         }
         $path = __DIR__.'/../../app/view/Rooms/create.php';
@@ -80,6 +80,6 @@ class RoomsController
     {
         $id = $request->get('id');
         $this->roomModel->delete($id);
-        return new RedirectResponse('/app.php/rooms');
+        return new RedirectResponse('/rooms');
     }
 }
