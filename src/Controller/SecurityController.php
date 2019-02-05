@@ -11,9 +11,8 @@ namespace Controller;
 
 use Core\HTTP\Session;
 use Core\Request\Request;
-use Core\Response\RedirectResponse;
-use Core\Response\Response;
-use Core\Response\TemplateResource;
+use Core\Response\{RedirectResponse, Response};
+use Core\Template\Renderer;
 use Form\LoginForm;
 use Service\SecurityService;
 
@@ -29,14 +28,29 @@ class SecurityController
     private $session;
 
     /**
-     * SecurityController constructor.
+     * @var Renderer
      */
-    public function __construct(SecurityService $securityService, Session $session)
+    private $renderer;
+
+    /**
+     * SecurityController constructor.
+     *
+     * @param SecurityService $securityService
+     * @param Session         $session
+     * @param Renderer        $renderer
+     */
+    public function __construct(SecurityService $securityService, Session $session, Renderer $renderer)
     {
         $this->securityService = $securityService;
         $this->session = $session;
+        $this->renderer = $renderer;
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return RedirectResponse|Response
+     */
     public function login(Request $request)
     {
         echo json_encode($this->session->get('user'));
@@ -49,12 +63,15 @@ class SecurityController
                 return new RedirectResponse('/installation_scheme');
             }
         }
-        $path = __DIR__.'/../../app/view/Users/login.php';
+        $path = 'Users/login.php';
 
-        return new Response(new TemplateResource($path, ['form' => $form]));
+        return new Response($this->renderer->render($path, ['form' => $form]));
     }
 
-    public function logout()
+    /**
+     * @return RedirectResponse
+     */
+    public function logout(): RedirectResponse
     {
         $this->securityService->logout();
 

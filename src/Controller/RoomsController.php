@@ -8,11 +8,10 @@
 
 namespace Controller;
 
-use Core\Response\EmptyResource;
 use Core\Response\RedirectResponse;
 use Core\Response\Response;
 use Core\Request\Request;
-use Core\Response\TemplateResource;
+use Core\Template\Renderer;
 use Form\RoomForm;
 use Model\RoomModel;
 
@@ -24,16 +23,31 @@ class RoomsController
      */
     private $roomModel;
 
-    public function __construct(RoomModel $room)
+    /**
+     * @var Renderer
+     */
+    private $renderer;
+
+    /**
+     * RoomsController constructor.
+     *
+     * @param RoomModel $room
+     * @param Renderer  $renderer
+     */
+    public function __construct(RoomModel $room, Renderer $renderer)
     {
         $this->roomModel = $room;
+        $this->renderer = $renderer;
     }
 
-    public function list(/* Request $request */)
+    /**
+     * @return Response
+     */
+    public function list(/* Request $request */): Response
     {
         $rooms = $this->roomModel->getList();
-        $path = __DIR__.'/../../app/view/Rooms/list.php';
-        return new Response(new TemplateResource($path, ['rooms' => $rooms]));
+        $path = 'Rooms/list.php';
+        return new Response($this->renderer->render($path, ['rooms' => $rooms]));
     }
 
     /**
@@ -45,14 +59,13 @@ class RoomsController
         if ($request->getMethod() === Request::POST) {
             $form->handleRequest($request);
             if ($form->isValid()) {
-                print_r($form->getViolations());
                 $this->roomModel->create($form->getData());
                 return new RedirectResponse('/rooms');
             }
         }
-        $path = __DIR__.'/../../app/view/Rooms/create.php';
+        $path = 'Rooms/create.php';
 
-        return new Response(new TemplateResource($path, ['form' => $form]));
+        return new Response($this->renderer->render($path, ['form' => $form]));
     }
 
     public function edit(Request $request)
@@ -60,7 +73,7 @@ class RoomsController
         $id = $request->get('id');
         $room = $this->roomModel->getRoom($id);
         if($room === null){
-            throw new \Exception('Room not found');
+            throw new \RuntimeException('Room not found');
         }
         $form = new RoomForm($this->roomModel, $room );
         if ($request->getMethod() === Request::POST) {
@@ -71,11 +84,16 @@ class RoomsController
                 return new RedirectResponse('/rooms');
             }
         }
-        $path = __DIR__.'/../../app/view/Rooms/create.php';
+        $path = 'Rooms/create.php';
 
-        return new Response(new TemplateResource($path, ['form' => $form, 'room' => $room]));
+        return new Response($this->renderer->render($path, ['form' => $form, 'room' => $room]));
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
     public function delete(Request $request)
     {
         $id = $request->get('id');

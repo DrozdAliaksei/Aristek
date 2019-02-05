@@ -8,11 +8,7 @@
 <?php $form = $this->data['form']; echo json_encode($form->getData()); ?>
 <h1><?php echo isset($this->data['scheme']) ? 'Edit scheme' : 'Create scheme'; ?></h1>
 
-<div class="errors-bl"><?php
-    $form = $this->data['form'];
-    foreach ($form->getViolations() as $key => $violation) { ?>
-        <div class="error-item"><?php echo $violation; ?></div>
-    <?php } ?></div>
+<?php require __DIR__.'/../Core/form_errors.php'; ?>
 
 <form method="POST">
     <!-- return field value -->

@@ -29,7 +29,10 @@ class UserModel implements Model
 
     /**
      * User constructor.
-     * @param Connection $connection
+     *
+     * @param Connection     $connection
+     * @param PasswordHelper $passwordHelper
+     * @param StringBuilder  $stringBuilder
      */
     public function __construct(Connection $connection, PasswordHelper $passwordHelper,StringBuilder $stringBuilder)
     {
@@ -38,9 +41,12 @@ class UserModel implements Model
         $this->stringBuilder = $stringBuilder;
     }
 
+    /**
+     * @return array
+     */
     public function getList(): array
     {
-        $sql = "SELECT * FROM users";
+        $sql = 'SELECT * FROM users';
         $users = $this->connection->fetchAll($sql);
         $users = array_map(function (array $user) {
             $user['roles'] = json_decode($user['roles']);
@@ -51,22 +57,32 @@ class UserModel implements Model
         return $users;
     }
 
+    /**
+     * @param array $user
+     */
     public function create(array $user)
     {
         $user = $this->preparePassword($user);
         $user['roles'] = json_encode($user['roles']);
-        $sql = "INSERT INTO users (login,password,roles) 
-                VALUES (:login,:password,:roles)";
+        $sql = 'INSERT INTO users (login,password,roles) 
+                VALUES (:login,:password,:roles)';
         $this->connection->execute($sql, $user);
 
     }
 
+    /**
+     * @param int $id
+     */
     public function delete(int $id)
     {
         $sql = 'DELETE FROM users WHERE id = :id';
         $this->connection->execute($sql, ['id' => $id]);
     }
 
+    /**
+     * @param array $user
+     * @param int   $id
+     */
     public function edit(array $user, int $id)
     {
         $user = $this->preparePassword($user);
@@ -76,6 +92,12 @@ class UserModel implements Model
         $this->connection->execute($sql, $user);
     }
 
+    /**
+     * @param string   $login
+     * @param int|null $id
+     *
+     * @return bool
+     */
     public function checkLogin(string $login, int $id = null): bool
     {
         $properties = ['login' => $login];
@@ -89,6 +111,11 @@ class UserModel implements Model
         return (bool)$this->connection->fetch($sql, $properties, \PDO::FETCH_COLUMN);
     }
 
+    /**
+     * @param int $id
+     *
+     * @return null
+     */
     public function getUser(int $id)
     {
         $sql = 'select * from users where id = :id';
@@ -100,6 +127,11 @@ class UserModel implements Model
         return $user?:null;
     }
 
+    /**
+     * @param $login
+     *
+     * @return null
+     */
     public function findByLogin($login)
     {
         $sql = 'select * from users where login=:login';
@@ -111,7 +143,12 @@ class UserModel implements Model
         return $user?:null;
     }
 
-    private function preparePassword(array $user)
+    /**
+     * @param array $user
+     *
+     * @return array
+     */
+    private function preparePassword(array $user): array
     {
         if($user['plain_password']){
             $password = $user['password']??null;

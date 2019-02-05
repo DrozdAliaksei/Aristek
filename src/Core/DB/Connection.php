@@ -8,6 +8,8 @@
 
 namespace Core\DB;
 
+use http\Exception;
+
 class Connection
 {
     /**
@@ -17,7 +19,8 @@ class Connection
 
     /**
      * Connection constructor.
-     * @param \PDO $pdo
+     *
+     * @param array $database
      */
     public function __construct(array $database)
     {
@@ -27,9 +30,10 @@ class Connection
     }
 
     /**
-     * @param string $sql
+     * @param string     $sql
      * @param array|null $properties
-     * @param int $fetchStyle
+     * @param int        $fetchStyle
+     *
      * @return mixed
      */
     public function fetch(string $sql, array $properties = null, $fetchStyle = \PDO::FETCH_ASSOC)
@@ -41,8 +45,11 @@ class Connection
     }
 
     /**
-     * @param string $sql
+     * @param string     $sql
      * @param array|null $properties
+     *
+     * @param int        $fetchStyle
+     *
      * @return array
      */
     public function fetchAll(string $sql, array $properties = null, $fetchStyle = \PDO::FETCH_ASSOC): array
@@ -57,5 +64,42 @@ class Connection
     {
         $statement = $this->pdo->prepare($sql);
         $statement->execute($properties);
+    }
+
+    /**
+     * @param            $sql
+     * @param array|null $properties
+     *
+     * @return string
+     * @throws \Exception
+     */
+    public function insert($sql, array $properties = null) :string
+    {
+        $statement = $this->pdo->prepare($sql);
+        if($statement->execute($properties) ===  false){
+            throw new \Exception(); //TODO rewrite
+        }
+
+        return $this->pdo->lastInsertId();
+    }
+
+    public function beginTransaction()
+    {
+        $this->pdo->beginTransaction();
+    }
+
+    public function commitTransaction()
+    {
+        $this->pdo->commit();
+    }
+
+    public function rollbackTransaction()
+    {
+        $this->pdo->rollBack();
+    }
+
+    public function lastInsertId()
+    {
+        return $this->pdo->lastInsertId();
     }
 }

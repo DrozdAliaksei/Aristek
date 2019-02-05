@@ -8,11 +8,10 @@
 
 namespace Controller;
 
-use Core\Response\EmptyResource;
 use Core\Response\RedirectResponse;
 use Core\Response\Response;
 use Core\Request\Request;
-use Core\Response\TemplateResource;
+use Core\Template\Renderer;
 use Form\EquipmentForm;
 use Model\EquipmentModel;
 
@@ -23,20 +22,37 @@ class EquipmentsController
      */
     private $equipmentModel;
 
-    public function __construct(EquipmentModel $equipment)
+    /**
+     * @var Renderer
+     */
+    private $renderer;
+
+    /**
+     * EquipmentsController constructor.
+     *
+     * @param EquipmentModel $equipment
+     * @param Renderer       $renderer
+     */
+    public function __construct(EquipmentModel $equipment, Renderer $renderer)
     {
         $this->equipmentModel = $equipment;
-    }
-
-    public function list(/* Request $request */)
-    {
-        $equipments = $this->equipmentModel->getList();
-        $path = __DIR__.'/../../app/view/Equipments/list.php';
-        return new Response(new TemplateResource($path, ['equipments' => $equipments]));
+        $this->renderer = $renderer;
     }
 
     /**
-     * @return EquipmentModel
+     * @return Response
+     */
+    public function list(/* Request $request */):Response
+    {
+        $equipments = $this->equipmentModel->getList();
+        $path = 'Equipments/list.php';
+        return new Response($this->renderer->render($path, ['equipments' => $equipments]));
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return RedirectResponse|Response
      */
     public function create(Request $request)
     {
@@ -44,22 +60,27 @@ class EquipmentsController
         if ($request->getMethod() === Request::POST) {
             $form->handleRequest($request);
             if ($form->isValid()) {
-                print_r($form->getViolations());
                 $this->equipmentModel->create($form->getData());
                 return new RedirectResponse('/equipments');
             }
         }
-        $path = __DIR__.'/../../app/view/Equipments/create.php';
+        $path = 'Equipments/create.php';
 
-        return new Response(new TemplateResource($path, ['form' => $form]));
+        return new Response($this->renderer->render($path, ['form' => $form]));
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return RedirectResponse|Response
+     * @throws \Exception
+     */
     public function edit(Request $request)
     {
         $id = $request->get('id');
         $equipment = $this->equipmentModel->getEquipment($id);
         if($equipment === null){
-            throw new \Exception('Equipment not found');
+            throw new \RuntimeException('Equipment not found');
         }
         $form = new EquipmentForm($this->equipmentModel, $equipment );
         if ($request->getMethod() === Request::POST) {
@@ -70,12 +91,17 @@ class EquipmentsController
                 return new RedirectResponse('/equipments');
             }
         }
-        $path = __DIR__.'/../../app/view/Equipments/create.php';
+        $path = 'Equipments/create.php';
 
-        return new Response(new TemplateResource($path, ['form' => $form, 'equipment' => $equipment]));
+        return new Response($this->renderer->render($path, ['form' => $form, 'equipment' => $equipment]));
     }
 
-    public function delete(Request $request)
+    /**
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function delete(Request $request): RedirectResponse
     {
         $id = $request->get('id');
         $this->equipmentModel->delete($id);

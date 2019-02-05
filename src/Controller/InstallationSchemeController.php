@@ -8,16 +8,15 @@
 
 namespace Controller;
 
-use Core\HTTP\Session;
-use Core\Response\EmptyResource;
 use Core\Response\RedirectResponse;
 use Core\Response\Response;
 use Core\Request\Request;
-use Core\Response\TemplateResource;
+use Core\Template\Renderer;
 use Form\InstallationSchemeForm;
 use Model\EquipmentModel;
 use Model\InstallationSchemeModel;
 use Model\RoomModel;
+use Service\SecurityService;
 
 class InstallationSchemeController
 {
@@ -34,27 +33,50 @@ class InstallationSchemeController
      */
     private $equipmentModel;
     /**
-     * @var Session
+     * @var SecurityService
      */
-    private $session;
+    private $securityService;
 
+    /**
+     * @var Renderer
+     */
+    private $renderer;
 
-    public function __construct(InstallationSchemeModel $schemeModel, RoomModel $roomModel, EquipmentModel $equipmentModel, Session $session)
-    {
+    /**
+     * InstallationSchemeController constructor.
+     *
+     * @param InstallationSchemeModel $schemeModel
+     * @param RoomModel               $roomModel
+     * @param EquipmentModel          $equipmentModel
+     * @param SecurityService         $securityService
+     * @param Renderer                $renderer
+     */
+    public function __construct(
+        InstallationSchemeModel $schemeModel,
+        RoomModel $roomModel,
+        EquipmentModel $equipmentModel,
+        SecurityService $securityService,
+        Renderer $renderer
+    ) {
         $this->schemeModel = $schemeModel;
         $this->roomModel = $roomModel;
         $this->equipmentModel = $equipmentModel;
-        $this->session = $session;
+        $this->securityService = $securityService;
+        $this->renderer = $renderer;
     }
 
+    /**
+     * @return Response
+     */
     public function list(/* Request $request */)
     {
-        //echo  json_encode($this->session->get('user'));
-        $roles = $this->session->get('user')['roles'];
+        $roles = $this->securityService->getRoles();
+        print_r($roles);
         //$schems = $this->schemeModel->getList();
         $schems = $this->schemeModel->getSchemesAvailableToRoles($roles);
-        $path = __DIR__.'/../../app/view/InstallationScheme/list.php';
-        return new Response(new TemplateResource($path, ['schems' => $schems]));
+        $path = 'InstallationScheme/list.php';
+
+        return new Response($this->renderer->render($path, ['schems' => $schems]));
     }
 
     /**
@@ -66,26 +88,35 @@ class InstallationSchemeController
         if ($request->getMethod() === Request::POST) {
             $form->handleRequest($request);
             if ($form->isValid()) {
-                print_r($form->getViolations());
                 $this->schemeModel->create($form->getData());
+
                 return new RedirectResponse('/installation_scheme');
             }
         }
-        $path = __DIR__.'/../../app/view/InstallationScheme/create.php';
+        $path = 'InstallationScheme/create.php';
 
         $rooms = $this->roomModel->getRooms();
         $equipments = $this->equipmentModel->getEquipments();
-        return new Response(new TemplateResource($path, ['form' => $form, 'rooms' => $rooms , 'equipments' => $equipments]));
+
+        return new Response(
+            $this->renderer->render($path, ['form' => $form, 'rooms' => $rooms, 'equipments' => $equipments])
+        );
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return RedirectResponse|Response
+     * @throws \Exception
+     */
     public function edit(Request $request)
     {
         $id = $request->get('id');
         $scheme = $this->schemeModel->getScheme($id);
-        if($scheme === null){
-            throw new \Exception('Scheme not found');
+        if ($scheme === null) {
+            throw new \RuntimeException('Scheme not found');
         }
-        $form = new InstallationSchemeForm($this->schemeModel, $scheme );
+        $form = new InstallationSchemeForm($this->schemeModel, $scheme);
         if ($request->getMethod() === Request::POST) {
             $form->handleRequest($request);
             if ($form->isValid()) {
@@ -94,25 +125,49 @@ class InstallationSchemeController
                 return new RedirectResponse('/installation_scheme');
             }
         }
-        $path = __DIR__.'/../../app/view/InstallationScheme/create.php';
+        $path = 'InstallationScheme/create.php';
 
         $rooms = $this->roomModel->getRooms();
         $equipments = $this->equipmentModel->getEquipments();
-        return new Response(new TemplateResource($path, ['form' => $form,'scheme' => $scheme, 'rooms' => $rooms , 'equipments' => $equipments]));
+
+        return new Response(
+            $this->renderer->render(
+                $path,
+                ['form' => $form, 'scheme' => $scheme, 'rooms' => $rooms, 'equipments' => $equipments]
+            )
+        );
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
     public function delete(Request $request)
     {
         $id = $request->get('id');
         $this->schemeModel->delete($id);
+
         return new RedirectResponse('/installation_scheme');
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
     public function changeStatus(Request $request)
     {
         $id = $request->get('id');
         $status = $request->get('status');
-        $this->schemeModel->changeStatus($id,$status);
+
+        if ($status == 1) {
+            $status = 0;
+        } else {
+            $status = 1;
+        }
+        $this->schemeModel->changeStatus($id, $status);
+
         return new RedirectResponse('/installation_scheme');
     }
 }
