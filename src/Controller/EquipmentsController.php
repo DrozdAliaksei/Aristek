@@ -42,10 +42,11 @@ class EquipmentsController
     /**
      * @return Response
      */
-    public function list(/* Request $request */):Response
+    public function list(/* Request $request */): Response
     {
         $equipments = $this->equipmentModel->getList();
         $path = 'Equipments/list.php';
+
         return new Response($this->renderer->render($path, ['equipments' => $equipments]));
     }
 
@@ -61,6 +62,7 @@ class EquipmentsController
             $form->handleRequest($request);
             if ($form->isValid()) {
                 $this->equipmentModel->create($form->getData());
+
                 return new RedirectResponse('/equipments');
             }
         }
@@ -79,10 +81,10 @@ class EquipmentsController
     {
         $id = $request->get('id');
         $equipment = $this->equipmentModel->getEquipment($id);
-        if($equipment === null){
+        if ($equipment === null) {
             throw new \RuntimeException('Equipment not found');
         }
-        $form = new EquipmentForm($this->equipmentModel, $equipment );
+        $form = new EquipmentForm($this->equipmentModel, $equipment);
         if ($request->getMethod() === Request::POST) {
             $form->handleRequest($request);
             if ($form->isValid()) {
@@ -105,6 +107,7 @@ class EquipmentsController
     {
         $id = $request->get('id');
         $this->equipmentModel->delete($id);
+
         return new RedirectResponse('/equipments');
     }
 }

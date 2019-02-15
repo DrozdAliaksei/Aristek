@@ -10,7 +10,7 @@ namespace Model;
 
 use Core\DB\Connection;
 
-class RoomModel implements Model
+class RoomModel
 {
     /**
      * @var Connection
@@ -26,28 +26,40 @@ class RoomModel implements Model
         $this->connection = $connection;
     }
 
+    /**
+     * @return array
+     */
     public function getList(): array
     {
-        $sql = "SELECT * FROM rooms";
-        $rooms = $this->connection->fetchAll($sql);
+        $sql = 'SELECT * FROM rooms';
 
-        return $rooms;
+        return $this->connection->fetchAll($sql);
     }
 
+    /**
+     * @param array $room
+     */
     public function create(array $room)
     {
-        $sql = "INSERT INTO rooms (name,description) 
-                VALUES (:name,:description)";
+        $sql = 'INSERT INTO rooms (name,description) 
+                VALUES (:name,:description)';
         $this->connection->execute($sql, $room);
 
     }
 
+    /**
+     * @param int $id
+     */
     public function delete(int $id)
     {
         $sql = 'DELETE FROM rooms WHERE id = :id';
         $this->connection->execute($sql, ['id' => $id]);
     }
 
+    /**
+     * @param array $room
+     * @param int   $id
+     */
     public function edit(array $room, int $id)
     {
         $room['id'] = $id;
@@ -55,6 +67,12 @@ class RoomModel implements Model
         $this->connection->execute($sql, $room);
     }
 
+    /**
+     * @param string   $name
+     * @param int|null $id
+     *
+     * @return bool
+     */
     public function checkName(string $name, int $id = null): bool
     {
         $properties = ['name' => $name];
@@ -68,14 +86,21 @@ class RoomModel implements Model
         return (bool)$this->connection->fetch($sql, $properties, \PDO::FETCH_COLUMN);
     }
 
+    /**
+     * @param int $id
+     *
+     * @return array
+     */
     public function getRoom(int $id): array
     {
         $sql = 'select * from rooms where id = :id';
-        $room = $this->connection->fetch($sql, ['id' => $id]);
 
-        return $room;
+        return $this->connection->fetch($sql, ['id' => $id]);
     }
 
+    /**
+     * @return array
+     */
     public function getRooms(): array
     {
         $sql = 'SELECT id,name FROM rooms';

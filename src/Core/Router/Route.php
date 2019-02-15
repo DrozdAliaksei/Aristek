@@ -34,6 +34,13 @@ class Route
 
     /**
      * Route constructor.
+     *
+     * @param string $path
+     * @param string $controllerClass
+     * @param string $method
+     * @param array  $rules
+     *
+     * @throws \Exception
      */
     public function __construct(string $path, string $controllerClass, string $method, array $rules = [])
     {
@@ -61,7 +68,11 @@ class Route
         return $this->method;
     }
 
-
+    /**
+     * @param string $path
+     *
+     * @return bool
+     */
     public function match(string $path): bool
     {
         return preg_match($this->pattern, $path);

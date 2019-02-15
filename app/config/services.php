@@ -8,8 +8,8 @@ return [
     ],
     \Controller\UsersController::class              => [
         \Model\UserModel::class,
-        \Core\HTTP\SessionProvider::class,
         \Core\Template\Renderer::class,
+        \Service\SecurityService::class
     ],
     \Controller\RoomsController::class              => [\Model\RoomModel::class, \Core\Template\Renderer::class],
     \Controller\EquipmentsController::class         => [\Model\EquipmentModel::class, \Core\Template\Renderer::class],

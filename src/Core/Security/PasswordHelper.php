@@ -10,22 +10,44 @@ namespace Core\Security;
 
 class PasswordHelper
 {
-    public function getHash(string $plainPassword, string $salt)
+    /**
+     * @param string $plainPassword
+     * @param string $salt
+     *
+     * @return string
+     */
+    public function getHash(string $plainPassword, string $salt): string
     {
         return md5($salt.'|'.$plainPassword);
     }
 
-    public function createToken(string $salt, string $hash)
+    /**
+     * @param string $salt
+     * @param string $hash
+     *
+     * @return string
+     */
+    public function createToken(string $salt, string $hash): string
     {
         return sprintf('%s:%s',$salt,$hash);
     }
 
+    /**
+     * @param string $token
+     *
+     * @return mixed
+     */
     public function getHashPart(string $token)
     {
         $parts = explode(':',$token,2);
         return $parts[1];
     }
 
+    /**
+     * @param string $token
+     *
+     * @return mixed
+     */
     public function getSaltPart(string $token)
     {
         $parts = explode(':',$token,2);

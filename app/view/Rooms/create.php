@@ -4,7 +4,8 @@
     <title><?php echo isset($this->data['room']) ? 'Edit Room' : 'Create room'; ?></title>
 </head>
 <body>
-<a href="/app.php/rooms">Rooms list</a>
+
+<?php require __DIR__.'/../Core/menu.php'; ?>
 
 <h1><?php echo isset($this->data['room']) ? 'Edit Room' : 'Create room'; ?></h1>
 

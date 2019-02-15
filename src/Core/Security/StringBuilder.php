@@ -8,7 +8,6 @@
 
 namespace Core\Security;
 
-
 class StringBuilder
 {
     public function build(int $length): string
@@ -17,7 +16,7 @@ class StringBuilder
         $stack = 'AZXCVBNMsdrfghbv2345tgvccrgtrhgfvcbr34654xzsdfg';
         $max = strlen($stack) - 1;
         for ($i = 0; $i < $length; $i++) {
-            $rand = rand(0, $max);
+            $rand = random_int(0, $max); // rand
             $string .= $stack[$rand];
         }
 

@@ -24,6 +24,8 @@ class GuestMiddleware implements MiddlewareInterface
 
     /**
      * GuestMiddleware constructor.
+     *
+     * @param SecurityService $securityService
      */
     public function __construct(SecurityService $securityService)
     {
@@ -37,7 +39,7 @@ class GuestMiddleware implements MiddlewareInterface
      */
     public function handle(Route $route, Request $request)
     {
-        if(!$this->securityService->isAuthirized() && $request->getPath() !== '/login'){
+        if(!$this->securityService->isAuthorized() && $request->getPath() !== '/login'){
             return new RedirectResponse('/app.php/login');
         }
 

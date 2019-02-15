@@ -15,7 +15,6 @@ use Core\Template\Renderer;
 use Form\RoomForm;
 use Model\RoomModel;
 
-
 class RoomsController
 {
     /**
@@ -47,11 +46,15 @@ class RoomsController
     {
         $rooms = $this->roomModel->getList();
         $path = 'Rooms/list.php';
+
         return new Response($this->renderer->render($path, ['rooms' => $rooms]));
     }
 
     /**
-     * @return RoomModel
+     * @param Request $request
+     *
+     * @return RedirectResponse|Response
+     * @throws \Exception
      */
     public function create(Request $request)
     {
@@ -60,6 +63,7 @@ class RoomsController
             $form->handleRequest($request);
             if ($form->isValid()) {
                 $this->roomModel->create($form->getData());
+
                 return new RedirectResponse('/rooms');
             }
         }
@@ -72,10 +76,10 @@ class RoomsController
     {
         $id = $request->get('id');
         $room = $this->roomModel->getRoom($id);
-        if($room === null){
+        if ($room === null) {
             throw new \RuntimeException('Room not found');
         }
-        $form = new RoomForm($this->roomModel, $room );
+        $form = new RoomForm($this->roomModel, $room);
         if ($request->getMethod() === Request::POST) {
             $form->handleRequest($request);
             if ($form->isValid()) {
@@ -94,10 +98,11 @@ class RoomsController
      *
      * @return RedirectResponse
      */
-    public function delete(Request $request)
+    public function delete(Request $request): RedirectResponse
     {
         $id = $request->get('id');
         $this->roomModel->delete($id);
+
         return new RedirectResponse('/rooms');
     }
 }

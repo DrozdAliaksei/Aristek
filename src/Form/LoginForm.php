@@ -8,15 +8,14 @@
 
 namespace Form;
 
-
-use Model\UserModel;
 use Service\SecurityService;
 
 class LoginForm
 {
-
     private $data = [];
+
     private $violations = [];
+
     /**
      * @var SecurityService
      */
@@ -24,32 +23,45 @@ class LoginForm
 
     /**
      * LoginForm constructor.
+     *
+     * @param SecurityService $securityService
      */
     public function __construct(SecurityService $securityService)
     {
         $this->securityService = $securityService;
     }
 
+    /**
+     * @return array
+     */
     public function getViolations(): array
     {
         return $this->violations;
     }
 
+    /**
+     * @return array
+     */
     public function getData(): array
     {
         return $this->data;
     }
 
-    public function isValid()
+    /**
+     * @return bool
+     */
+    public function isValid(): bool
     {
         return count($this->violations) === 0;
     }
 
+    /**
+     * @param \Core\Request\Request $request
+     */
     public function handleRequest(\Core\Request\Request $request)
     {
         $this->data['login'] = $login = $request->get('login');
         $this->data['password'] = $password = $request->get('password');
-
 
         if ($login && $this->securityService->userExist($login)) {
             if (!$password || !$this->securityService->isPasswordValid($login, $password)) {
@@ -57,7 +69,6 @@ class LoginForm
             }
         } else {
             $this->violations['login'] = 'Invalid credentials lg';
-
         }
     }
 }

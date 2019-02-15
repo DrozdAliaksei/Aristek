@@ -15,13 +15,16 @@ use Model\InstallationSchemeModel;
 class InstallationSchemeForm
 {
     private $data;
+
     private $violations = [];
+
     private $schemeModel;
 
     /**
      * UserForm constructor.
+     *
      * @param InstallationSchemeModel $schemeModel
-     * @param array $scheme
+     * @param array                   $data
      */
     public function __construct(InstallationSchemeModel $schemeModel, array $data = [])
     {
@@ -53,11 +56,17 @@ class InstallationSchemeForm
         return $this->data;
     }
 
-    public function isValid()
+    /**
+     * @return bool
+     */
+    public function isValid(): bool
     {
         return count($this->violations) === 0;
     }
 
+    /**
+     * @param Request $request
+     */
     public function handleRequest(Request $request)
     {
 
@@ -65,7 +74,7 @@ class InstallationSchemeForm
         $this->data['equipment_id'] = $request->get('equipment_id');
         $this->data['displayable_name'] = $request->get('displayable_name');
         $this->data['status'] = $request->get('status');
-        $this->data['role'] = (array)$request->get('role', []);
+        $this->data['role'] = (array) $request->get('role', []);
 
         $id = $this->data['id'] ?? null;
         if ($this->schemeModel->checkScheme($this->data['room_id'], $this->data['equipment_id'], $id)) {
@@ -76,7 +85,7 @@ class InstallationSchemeForm
         } elseif (strlen($this->data['displayable_name']) > 30) {
             $this->violations['displayable_name'] = 'Displayable name is too long';
         }
-        if($this->data['status'] != 0 && $this->data['status'] != 1){
+        if ($this->data['status'] != 0 && $this->data['status'] != 1) {
             $this->violations['status'] = 'Impossible status';
         }
         if (!$this->data['role']) {

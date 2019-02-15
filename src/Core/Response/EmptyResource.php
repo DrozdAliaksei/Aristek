@@ -8,12 +8,10 @@
 
 namespace Core\Response;
 
-
 class EmptyResource implements ResourceInterface
 {
     public function getContent()
     {
         // TODO: Implement getContent() method.
     }
-
 }

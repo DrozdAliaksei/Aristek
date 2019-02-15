@@ -37,7 +37,7 @@ class MenuBuilder
     /**
      * @return Menu
      */
-    public function createMenu()
+    public function createMenu(): Menu
     {
         return new Menu($this->getItems());
     }
@@ -56,10 +56,12 @@ class MenuBuilder
 
         foreach ($this->menu as $menuItem){
             $access = array_intersect($role,$menuItem['role']);
+
             if(count($access)>0){
-                $userMenu[] = $menuItem;
+                $userMenu[]=['url' => $menuItem['url'], 'title' => $menuItem['title']];
             }
         }
+
         return $userMenu;
     }
 }

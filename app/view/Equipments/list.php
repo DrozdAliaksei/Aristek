@@ -3,7 +3,10 @@
 <head></head>
 <body>
 <h1>Equipments</h1>
+
+<?php require __DIR__.'/../Core/menu.php'; ?>
 <a href="/app.php/equipments/create">Add new equipment</a>
+
 <table width="100%" cellspacing="0" style="text-align: center">
     <thead>
     <tr>

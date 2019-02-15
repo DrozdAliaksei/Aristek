@@ -20,9 +20,11 @@ class TemplateResource implements ResourceInterface
      */
     private $data;
 
-
     /**
      * TemplateResource constructor.
+     *
+     * @param string $template
+     * @param array  $data
      */
     public function __construct(string $template, array $data =[])
     {
@@ -31,6 +33,9 @@ class TemplateResource implements ResourceInterface
         $this->data = $data;
     }
 
+    /**
+     * @return false|string
+     */
     public function getContent()
     {
         ob_start();

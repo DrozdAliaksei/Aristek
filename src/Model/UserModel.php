@@ -12,7 +12,7 @@ use Core\DB\Connection;
 use Core\Security\PasswordHelper;
 use Core\Security\StringBuilder;
 
-class UserModel implements Model
+class UserModel
 {
     /**
      * @var Connection
@@ -141,6 +141,18 @@ class UserModel implements Model
         }
 
         return $user?:null;
+    }
+
+    /**
+     * @param array $user
+     * @param int   $id
+     */
+    public function changePassword(array $user, int $id)
+    {
+        $user['id'] = $id;
+        $user = $this->preparePassword($user);
+        $sql = 'UPDATE users SET password=:password WHERE id=:id';
+        $this->connection->execute($sql, $user);
     }
 
     /**

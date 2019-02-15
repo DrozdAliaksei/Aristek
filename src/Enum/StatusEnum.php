@@ -8,7 +8,6 @@
 
 namespace Enum;
 
-
 final class StatusEnum
 {
     const On = ['On', 1];

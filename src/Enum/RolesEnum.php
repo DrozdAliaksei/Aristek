@@ -8,7 +8,6 @@
 
 namespace Enum;
 
-
 final class RolesEnum
 {
     const ADMIN = 'admin';

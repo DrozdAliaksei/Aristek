@@ -8,7 +8,7 @@
 
 namespace Core\DB;
 
-use http\Exception;
+use RuntimeException;
 
 class Connection
 {
@@ -60,6 +60,10 @@ class Connection
         return $statement->fetchAll($fetchStyle);
     }
 
+    /**
+     * @param string     $sql
+     * @param array|null $properties
+     */
     public function execute(string $sql, array $properties = null)
     {
         $statement = $this->pdo->prepare($sql);
@@ -77,7 +81,7 @@ class Connection
     {
         $statement = $this->pdo->prepare($sql);
         if($statement->execute($properties) ===  false){
-            throw new \Exception(); //TODO rewrite
+            throw new RuntimeException(); //TODO rewrite
         }
 
         return $this->pdo->lastInsertId();
@@ -98,7 +102,10 @@ class Connection
         $this->pdo->rollBack();
     }
 
-    public function lastInsertId()
+    /**
+     * @return string
+     */
+    public function lastInsertId(): string
     {
         return $this->pdo->lastInsertId();
     }

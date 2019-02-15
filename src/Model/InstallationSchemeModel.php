@@ -41,8 +41,6 @@ class InstallationSchemeModel
     }
 
     /**
-     * //TODO : catch exception and rollbackTransaction or commit transaction if everything is ok
-     *
      * @param array $scheme
      *
      * @throws \Exception
@@ -72,7 +70,7 @@ class InstallationSchemeModel
 
             $this->connection->commitTransaction();
         } catch (\Exception $exception) {
-            die($exception);
+            echo $exception;
             $this->connection->rollbackTransaction();
         }
     }
@@ -85,13 +83,14 @@ class InstallationSchemeModel
         try {
             $this->connection->beginTransaction();
 
+            $sql = 'DELETE FROM installation_scheme_roles
+                WHERE installation_scheme_id = :id';
+            $this->connection->execute($sql, ['id' => $id]);
+
             $sql = 'DELETE FROM installation_scheme 
                 WHERE id = :id';
             $this->connection->execute($sql, ['id' => $id]);
 
-            $sql = 'DELETE FROM installation_scheme_roles
-                WHERE installation_scheme_id = :id';
-            $this->connection->execute($sql, ['id' => $id]);
             $this->connection->commitTransaction();
         } catch (\Exception $exception) {
             echo $exception;
@@ -120,7 +119,7 @@ class InstallationSchemeModel
                     'equipment_id'     => $scheme['equipment_id'],
                     'displayable_name' => $scheme['displayable_name'],
                     'status'           => $scheme['status'],
-                    'id'               => $scheme['id']
+                    'id'               => $scheme['id'],
                 ]
             );
 
@@ -137,7 +136,6 @@ class InstallationSchemeModel
             $this->connection->commitTransaction();
         } catch (\Exception $exception) {
             echo $exception;
-            die('edit die');
         }
     }
 
@@ -207,23 +205,19 @@ class InstallationSchemeModel
         if (in_array('admin', $roles, true)) {
             return $this->getList();
         }
+        $in = implode(',', array_fill(0, count($roles), '?'));
 
-        $schemesID = [];
-        foreach ($roles as $role) {
-            $sql = 'SELECT installation_scheme_id FROM installation_scheme_roles WHERE role = :role';
-            $schemesID = $this->connection->fetchAll($sql, ['role' => $role]);
-        }  //TODO rewrite
-
-        $result = [];
-        foreach ($schemesID as $schemeID) {
-            $sql = 'SELECT installation_scheme.id,rooms.name AS room_name,equipments.name AS equipment_name,displayable_name,status
-            FROM installation_scheme 
+        $sql = sprintf(
+            'SELECT installation_scheme.id,rooms.name AS room_name,equipments.name AS equipment_name,displayable_name,status
+            FROM installation_scheme
             INNER JOIN rooms ON installation_scheme.room_id = rooms.id
-            INNER JOIN equipments ON installation_scheme.equipment_id = equipments.id WHERE installation_scheme.id = :id';
+            INNER JOIN equipments ON installation_scheme.equipment_id = equipments.id
+            INNER JOIN installation_scheme_roles ON installation_scheme.id = installation_scheme_roles.installation_scheme_id
+            WHERE installation_scheme_roles.role IN (%s)
+            GROUP BY installation_scheme.id',
+            $in
+        );
 
-            $result[] = $this->connection->fetch($sql, ['id' => $schemeID['installation_scheme_id']]);
-        }
-
-        return $result;
+        return $this->connection->fetchAll($sql, $roles);
     }
 }

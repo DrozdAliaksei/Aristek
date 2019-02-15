@@ -9,6 +9,7 @@
 namespace Model;
 
 use Core\DB\Connection;
+use Core\Form\FormInterface;
 
 class EquipmentModel
 {
@@ -26,28 +27,40 @@ class EquipmentModel
         $this->connection = $connection;
     }
 
+    /**
+     * @return array
+     */
     public function getList(): array
     {
-        $sql = "SELECT * FROM equipments";
-        $equipments = $this->connection->fetchAll($sql);
+        $sql = 'SELECT * FROM equipments';
 
-        return $equipments;
+        return $this->connection->fetchAll($sql);
     }
 
+    /**
+     * @param array $equipment
+     */
     public function create(array $equipment)
     {
-        $sql = "INSERT INTO equipments (name,description) 
-                VALUES (:name,:description)";
+        $sql = 'INSERT INTO equipments (name,description) 
+                VALUES (:name,:description)';
         $this->connection->execute($sql, $equipment);
 
     }
 
+    /**
+     * @param int $id
+     */
     public function delete(int $id)
     {
         $sql = 'DELETE FROM equipments WHERE id = :id';
         $this->connection->execute($sql, ['id' => $id]);
     }
 
+    /**
+     * @param array $equipment
+     * @param int   $id
+     */
     public function edit(array $equipment, int $id)
     {
         $equipment['id'] = $id;
@@ -55,6 +68,12 @@ class EquipmentModel
         $this->connection->execute($sql, $equipment);
     }
 
+    /**
+     * @param string   $name
+     * @param int|null $id
+     *
+     * @return bool
+     */
     public function checkName(string $name, int $id = null): bool
     {
         $properties = ['name' => $name];
@@ -68,19 +87,25 @@ class EquipmentModel
         return (bool)$this->connection->fetch($sql, $properties, \PDO::FETCH_COLUMN);
     }
 
+    /**
+     * @param int $id
+     *
+     * @return array
+     */
     public function getEquipment(int $id): array
     {
         $sql = 'select * from equipments where id = :id';
-        $equipment = $this->connection->fetch($sql, ['id' => $id]);
 
-        return $equipment;
+        return $this->connection->fetch($sql, ['id' => $id]);
     }
 
+    /**
+     * @return array
+     */
     public function getEquipments() : array
     {
         $sql = 'SELECT id,name FROM equipments';
-        $equipments = $this->connection->fetchAll($sql);
 
-        return $equipments;
+        return $this->connection->fetchAll($sql);
     }
 }

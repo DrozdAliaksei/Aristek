@@ -14,20 +14,26 @@ use Model\EquipmentModel;
 class EquipmentForm
 {
     private $data;
+
     private $violations = [];
+
     private $equipmentModel;
 
     /**
      * RoomForm constructor.
+     *
      * @param EquipmentModel $equipmentModel
-     * @param array $equipments
+     * @param array          $data
      */
-    public function __construct(EquipmentModel $equipmentModel,array $data =[])
+    public function __construct(EquipmentModel $equipmentModel, array $data = [])
     {
         $this->data = $data;
         $this->equipmentModel = $equipmentModel;
     }
 
+    /**
+     * @param Request $request
+     */
     public function handleRequest(Request $request)
     {
 
@@ -59,9 +65,11 @@ class EquipmentForm
         return $this->data;
     }
 
-    public function isValid()
+    /**
+     * @return bool
+     */
+    public function isValid(): bool
     {
         return count($this->violations) === 0;
     }
-
 }

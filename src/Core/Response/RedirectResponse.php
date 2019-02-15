@@ -12,11 +12,14 @@ class RedirectResponse extends Response
 {
     /**
      * Response constructor.
-     * @param $content
+     *
+     * @param     $url
+     * @param int $code
      */
     public function __construct($url, int $code = self::REDIRECT_FOUND)
     {
-        $this->resourse = new EmptyResource();
-        $this->headers= ['Location'=> $url];
+        $resourse = new EmptyResource();
+        $headers = ['Location' => $url];
+        parent::__construct($resourse, $code, $headers);
     }
 }

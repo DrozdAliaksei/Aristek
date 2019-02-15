@@ -53,7 +53,6 @@ class SecurityController
      */
     public function login(Request $request)
     {
-        echo json_encode($this->session->get('user'));
         $form = new LoginForm($this->securityService);
         if ($request->getMethod() === Request::POST) {
             $form->handleRequest($request);

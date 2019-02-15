@@ -4,8 +4,10 @@
     <title>Create Installation scheme</title>
 </head>
 <body>
-<a href="/app.php/installation_scheme">Installation scheme list</a>
-<?php $form = $this->data['form']; echo json_encode($form->getData()); ?>
+
+<?php require __DIR__.'/../Core/menu.php'; ?>
+
+<?php $form = $this->data['form'];?>
 <h1><?php echo isset($this->data['scheme']) ? 'Edit scheme' : 'Create scheme'; ?></h1>
 
 <?php require __DIR__.'/../Core/form_errors.php'; ?>

@@ -5,10 +5,10 @@
     <title>Create User</title>
 </head>
 <body>
-<a href="/app.php/users">Main page</a>
 
 <h1><?php echo $isCreate ? 'Create user' : 'Edit User'; ?></h1>
 
+<?php require __DIR__.'/../Core/menu.php'; ?>
 <?php require __DIR__.'/../Core/form_errors.php'; ?>
 
 <form method="POST">

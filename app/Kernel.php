@@ -19,24 +19,32 @@ class Kernel
      * @var array
      */
     private $config;
+
     /**
      * @var Connection
      */
     private $connection;
 
+    /**
+     * Kernel constructor.
+     */
     public function __construct()
     {
         $this->config = require __DIR__.'/config/config.php';
         $this->container = \Core\ServiceContainer::getInstance($this->config);
     }
 
-    public function getConnection()
+    /**
+     * @return Connection
+     */
+    public function getConnection(): Connection
     {
         return $this->connection;
     }
 
     /**
      * @param $request
+     *
      * @return Response
      */
     public function createResponse(Request $request): Response
@@ -52,11 +60,11 @@ class Kernel
         $request->setAttributes($params);
 
         return call_user_func([$controller, $route->getMethod()], $request);
-
     }
 
     /**
      * @param Request $request
+     *
      * @return Route|null
      */
     private function getRoute(Request $request): Route
@@ -70,9 +78,13 @@ class Kernel
         return $route;
     }
 
+    /**
+     * @param Route $route
+     *
+     * @return mixed
+     */
     private function getController(Route $route)
     {
         return $this->container->get($route->getControllerClass());
     }
-
-}   
+}

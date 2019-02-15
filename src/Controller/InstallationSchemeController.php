@@ -68,11 +68,9 @@ class InstallationSchemeController
     /**
      * @return Response
      */
-    public function list(/* Request $request */)
+    public function list(/* Request $request */): Response
     {
         $roles = $this->securityService->getRoles();
-        print_r($roles);
-        //$schems = $this->schemeModel->getList();
         $schems = $this->schemeModel->getSchemesAvailableToRoles($roles);
         $path = 'InstallationScheme/list.php';
 
@@ -80,7 +78,10 @@ class InstallationSchemeController
     }
 
     /**
-     * @return InstallationSchemeModel
+     * @param Request $request
+     *
+     * @return RedirectResponse|Response
+     * @throws \Exception
      */
     public function create(Request $request)
     {
@@ -143,7 +144,7 @@ class InstallationSchemeController
      *
      * @return RedirectResponse
      */
-    public function delete(Request $request)
+    public function delete(Request $request): RedirectResponse
     {
         $id = $request->get('id');
         $this->schemeModel->delete($id);
@@ -156,7 +157,7 @@ class InstallationSchemeController
      *
      * @return RedirectResponse
      */
-    public function changeStatus(Request $request)
+    public function changeStatus(Request $request): RedirectResponse
     {
         $id = $request->get('id');
         $status = $request->get('status');

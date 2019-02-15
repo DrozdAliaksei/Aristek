@@ -6,21 +6,31 @@ return [
     [
         'url'   => '/users',
         'title' => 'Users',
-        'roles' => [RolesEnum::ADMIN, RolesEnum::USER]
+        'roles' => [RolesEnum::ADMIN, RolesEnum::USER],
     ],
     [
         'url'   => '/rooms',
         'title' => 'Rooms',
-        'roles' => [RolesEnum::ADMIN]
+        'roles' => [RolesEnum::ADMIN],
     ],
     [
         'url'   => '/equipments',
         'title' => 'Equipments',
-        'roles' => [RolesEnum::ADMIN, RolesEnum::USER]
+        'roles' => [RolesEnum::ADMIN],
     ],
     [
         'url'   => '/installation_scheme',
         'title' => 'Installation schemes',
-        'roles' => [RolesEnum::ADMIN, RolesEnum::USER,RolesEnum::VISITOR]
-    ]
+        'roles' => [RolesEnum::ADMIN, RolesEnum::USER, RolesEnum::VISITOR],
+    ],
+    [
+        'url'   => '/profile',
+        'title' => 'Profile',
+        'roles' => [RolesEnum::ADMIN, RolesEnum::USER,RolesEnum::VISITOR],
+    ],
+    [
+        'url'   => '/logout',
+        'title' => 'Logout',
+        'roles' => [RolesEnum::ADMIN, RolesEnum::USER, RolesEnum::VISITOR],
+    ],
 ];

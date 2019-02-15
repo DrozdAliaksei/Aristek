@@ -34,16 +34,30 @@ class Renderer
         $this->menuBuilder = $menuBuilder;
     }
 
+    /**
+     * @param string $path
+     * @param array  $properties
+     *
+     * @return TemplateResource
+     * @throws \Exception
+     */
     public function render(string $path, array $properties)
     {
+        $properties['menu'] = $this->menuBuilder->createMenu();
         return new TemplateResource($this->getRealPath($path),$properties);
     }
 
+    /**
+     * @param $path
+     *
+     * @return string
+     * @throws \Exception
+     */
     private function getRealPath($path) : string
     {
         $realPath = $this->viewDir.'/'.$path;
         if(!file_exists($realPath)){
-            throw new \Exception(sprintf('Template %s is not found', $path));
+            throw new \RuntimeException(sprintf('Template %s is not found', $path));
         }
         return $realPath;
     }

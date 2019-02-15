@@ -9,6 +9,7 @@
 use Core\Router\Router;
 
 Router::add('/login', \Controller\SecurityController::class, 'login');
+Router::add('/profile', \Controller\UsersController::class, 'profile');
 Router::add('/logout', \Controller\SecurityController::class, 'logout');
 Router::add('/users', \Controller\UsersController::class, 'list');
 Router::add('/users/create', \Controller\UsersController::class, 'create');

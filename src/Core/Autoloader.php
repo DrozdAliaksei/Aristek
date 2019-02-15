@@ -24,11 +24,15 @@ class Autoloader
         $this->dirs = $dirs;
     }
 
-    public function load(string $class){
-        $subPath = str_replace('\\' , DIRECTORY_SEPARATOR, $class);
-        foreach ($this->dirs as $dir){
-            $path = sprintf('%s/%s.php',$dir,$subPath);
-            if(file_exists($path)){
+    /**
+     * @param string $class
+     */
+    public function load(string $class)
+    {
+        $subPath = str_replace('\\', DIRECTORY_SEPARATOR, $class);
+        foreach ($this->dirs as $dir) {
+            $path = sprintf('%s/%s.php', $dir, $subPath);
+            if (file_exists($path)) {
                 require_once $path;
                 break;
             }

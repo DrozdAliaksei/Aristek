@@ -3,7 +3,10 @@
 <head></head>
 <body>
 <h1>Rooms</h1>
+
+<?php require __DIR__.'/../Core/menu.php'; ?>
 <a href="/app.php/rooms/create">Add new room</a>
+
 <table width="100%" cellspacing="0" style="text-align: center">
     <thead>
     <tr>

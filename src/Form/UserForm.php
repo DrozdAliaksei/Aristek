@@ -12,18 +12,19 @@ use Core\Request\Request;
 use Enum\RolesEnum;
 use Model\UserModel;
 
-
 class UserForm
 {
-
     private $data;
+
     private $violations = [];
+
     private $userModel;
 
     /**
      * UserForm constructor.
+     *
      * @param UserModel $userModel
-     * @param array $user
+     * @param array     $data
      */
     public function __construct(UserModel $userModel, array $data = [])
     {
@@ -31,13 +32,16 @@ class UserForm
         $this->data = $data;
     }
 
+    /**
+     * @param Request $request
+     */
     public function handleRequest(Request $request)
     {
 
         $this->data['login'] = $request->get('login');
         $this->data['plain_password'] = $request->get('plain_password');
         $this->data['plain_password_confirm'] = $request->get('plain_password_confirm');
-        $this->data['roles'] = (array)$request->get('roles', []);
+        $this->data['roles'] = (array) $request->get('roles', []);
 
         $id = $this->data['id'] ?? null;
         if ($this->userModel->checkLogin($this->data['login'], $id)) {
@@ -72,12 +76,15 @@ class UserForm
     {
         $data = $this->data;
         unset($data['plain_password_confirm']);
+
         return $data;
     }
 
-    public function isValid()
+    /**
+     * @return bool
+     */
+    public function isValid(): bool
     {
         return count($this->violations) === 0;
     }
-
 }

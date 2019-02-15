@@ -29,6 +29,9 @@ class RoleMiddleware implements MiddlewareInterface
 
     /**
      * RoleMiddleware constructor.
+     *
+     * @param array           $routeSecurity
+     * @param SecurityService $securityService
      */
     public function __construct(array $routeSecurity, SecurityService $securityService)
     {
@@ -48,7 +51,7 @@ class RoleMiddleware implements MiddlewareInterface
         $roles = $this->securityService->getRoles();
         $isAuthenticated = $this->isAuthenticated($request->getPath(), $roles);
         if ($isAuthenticated === false) {
-            throw new UnauthorizedException();//TODO maybe redirect with violations about low status of the role
+            throw new UnauthorizedException();
         }
 
         return null;

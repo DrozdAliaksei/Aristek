@@ -3,7 +3,10 @@
 <head></head>
 <body>
 <h1>Installation scheme</h1>
+
+<?php require __DIR__.'/../Core/menu.php'; ?>
 <a href="/app.php/installation_scheme/create">Add new scheme</a>
+
 <table width="100%" cellspacing="0" style="text-align: center">
     <thead>
     <tr>

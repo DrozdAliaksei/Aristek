@@ -13,17 +13,19 @@ use Model\RoomModel;
 
 class RoomForm
 {
-
     private $data;
+
     private $violations = [];
+
     private $roomModel;
 
     /**
      * RoomForm constructor.
+     *
      * @param RoomModel $roomModel
-     * @param array $room
+     * @param array     $data
      */
-    public function __construct(RoomModel $roomModel,array $data =[])
+    public function __construct(RoomModel $roomModel, array $data = [])
     {
         $this->data = $data;
         $this->roomModel = $roomModel;
@@ -60,9 +62,11 @@ class RoomForm
         return $this->data;
     }
 
-    public function isValid()
+    /**
+     * @return bool
+     */
+    public function isValid(): bool
     {
         return count($this->violations) === 0;
     }
-
 }
