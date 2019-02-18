@@ -74,7 +74,7 @@ class InstallationSchemeController
         $schems = $this->schemeModel->getSchemesAvailableToRoles($roles);
         $path = 'InstallationScheme/list.php';
 
-        return new Response($this->renderer->render($path, ['schems' => $schems]));
+        return new Response($this->renderer->render($path, ['schems' => $schems, 'roles' => $roles]));
     }
 
     /**

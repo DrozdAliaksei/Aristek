@@ -21,6 +21,9 @@
         <?php foreach (\Enum\RolesEnum::getAll() as $role) { ?>
             <option value="<?php echo $role ?>"
                 <?php
+                if($this->data['roles'] === false && $role ==='admin'){
+                  continue;
+                }
                 foreach ($form->getData()['roles'] as $role_) {
                     if ($role_ === $role) {
                         echo 'selected';

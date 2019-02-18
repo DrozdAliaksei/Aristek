@@ -93,6 +93,9 @@ class UsersController
      */
     public function create(Request $request)
     {
+        $roles = $this->securityService->getRoles();
+        $isAdmin = in_array('admin',$roles,true);
+
         $form = new UserForm($this->userModel);
         if ($request->getMethod() === Request::POST) {
             $form->handleRequest($request);
@@ -104,7 +107,7 @@ class UsersController
         }
         $path = 'Users/create.php';
 
-        return new Response($this->renderer->render($path, ['form' => $form]));
+        return new Response($this->renderer->render($path, ['form' => $form, 'roles' => $isAdmin]));
     }
 
     /**
@@ -115,6 +118,9 @@ class UsersController
      */
     public function edit(Request $request)
     {
+        $roles = $this->securityService->getRoles();
+        $isAdmin = in_array('admin',$roles,true);
+
         $id = $request->get('id');
         $user = $this->userModel->getUser($id);
         if ($user === null) {
@@ -131,7 +137,7 @@ class UsersController
         }
         $path = 'Users/create.php';
 
-        return new Response($this->renderer->render($path, ['form' => $form, 'user' => $user]));
+        return new Response($this->renderer->render($path, ['form' => $form, 'user' => $user, 'roles' => $isAdmin]));
     }
 
     /**
@@ -141,6 +147,8 @@ class UsersController
      */
     public function delete(Request $request): RedirectResponse
     {
+        $roles = $this->securityService->getRoles();
+
         $id = $request->get('id');
         $this->userModel->delete($id);
 

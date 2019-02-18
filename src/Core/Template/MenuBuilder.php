@@ -55,8 +55,7 @@ class MenuBuilder
         }
 
         foreach ($this->menu as $menuItem){
-            $access = array_intersect($role,$menuItem['role']);
-
+            $access = array_intersect($role,$menuItem['roles']);
             if(count($access)>0){
                 $userMenu[]=['url' => $menuItem['url'], 'title' => $menuItem['title']];
             }

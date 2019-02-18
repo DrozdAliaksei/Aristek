@@ -5,7 +5,10 @@
 <h1>Installation scheme</h1>
 
 <?php require __DIR__.'/../Core/menu.php'; ?>
-<a href="/app.php/installation_scheme/create">Add new scheme</a>
+
+<?php if(count(array_intersect(['admin','user'],$this->data['roles']))>0){?>
+  <a href="/app.php/installation_scheme/create">Add new scheme</a>
+<?php } ?>
 
 <table width="100%" cellspacing="0" style="text-align: center">
     <thead>
@@ -29,8 +32,10 @@
             <td><?php if($scheme['status'] == 1 ){echo "On";}else{echo "Off";} ?></td>
             <td>
                 <a href="/app.php/installation_scheme/<?php echo $scheme['id']; ?>/<?php echo $scheme['status']; ?>/change_status">Change Status</a>
+                <?php if(count(array_intersect(['admin','user'],$this->data['roles']))>0){?>
                 <a href="/app.php/installation_scheme/<?php echo $scheme['id']; ?>/edit">Edit</a>
                 <a href="/app.php/installation_scheme/<?php echo $scheme['id']; ?>/delete">Delete</a>
+            <?php } ?>
             </td>
         </tr>
     <?php } ?>
