@@ -71,10 +71,10 @@ final class Session
      *
      * @return mixed
      */
-    public function get(string $key)
+    public function get(string $key, $default = null)
     {
         $this->checkSessionStarted();
-        return$_SESSION[$key];
+        return $_SESSION[$key] ?? $default;
     }
 
     /**

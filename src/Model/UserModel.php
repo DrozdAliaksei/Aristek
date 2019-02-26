@@ -11,6 +11,7 @@ namespace Model;
 use Core\DB\Connection;
 use Core\Security\PasswordHelper;
 use Core\Security\StringBuilder;
+use Enum\RolesEnum;
 
 class UserModel
 {
@@ -18,10 +19,12 @@ class UserModel
      * @var Connection
      */
     private $connection;
+
     /**
      * @var PasswordHelper
      */
     private $passwordHelper;
+
     /**
      * @var StringBuilder
      */
@@ -34,7 +37,7 @@ class UserModel
      * @param PasswordHelper $passwordHelper
      * @param StringBuilder  $stringBuilder
      */
-    public function __construct(Connection $connection, PasswordHelper $passwordHelper,StringBuilder $stringBuilder)
+    public function __construct(Connection $connection, PasswordHelper $passwordHelper, StringBuilder $stringBuilder)
     {
         $this->connection = $connection;
         $this->passwordHelper = $passwordHelper;
@@ -47,14 +50,8 @@ class UserModel
     public function getList(): array
     {
         $sql = 'SELECT * FROM users';
-        $users = $this->connection->fetchAll($sql);
-        $users = array_map(function (array $user) {
-            $user['roles'] = json_decode($user['roles']);
 
-            return $user;
-        }, $users);
-
-        return $users;
+        return $this->connection->fetchAll($sql);
     }
 
     /**
@@ -63,11 +60,9 @@ class UserModel
     public function create(array $user)
     {
         $user = $this->preparePassword($user);
-        $user['roles'] = json_encode($user['roles']);
-        $sql = 'INSERT INTO users (login,password,roles) 
-                VALUES (:login,:password,:roles)';
+        $sql = 'INSERT INTO users (login,password,role) 
+                VALUES (:login,:password,:role)';
         $this->connection->execute($sql, $user);
-
     }
 
     /**
@@ -75,6 +70,10 @@ class UserModel
      */
     public function delete(int $id)
     {
+        if ($this->getUser($id)['role'] === RolesEnum::ADMIN && (int) $this->getCountOfAdmins() === 1) {
+            throw new \LogicException('Can not delete last admin');
+        }
+
         $sql = 'DELETE FROM users WHERE id = :id';
         $this->connection->execute($sql, ['id' => $id]);
     }
@@ -87,8 +86,7 @@ class UserModel
     {
         $user = $this->preparePassword($user);
         $user['id'] = $id;
-        $user['roles'] = json_encode($user['roles']);
-        $sql = 'UPDATE users SET login=:login,password=:password,roles=:roles WHERE id=:id';
+        $sql = 'UPDATE users SET login=:login,password=:password,role=:role WHERE id=:id';
         $this->connection->execute($sql, $user);
     }
 
@@ -102,13 +100,13 @@ class UserModel
     {
         $properties = ['login' => $login];
         if (null === $id) {
-            $sql = 'select id from users where login=:login';
+            $sql = 'SELECT id FROM users WHERE login=:login';
         } else {
-            $sql = 'select id from users where login=:login and id != :id';
+            $sql = 'SELECT id FROM users WHERE login=:login AND id != :id';
             $properties['id'] = $id;
         }
 
-        return (bool)$this->connection->fetch($sql, $properties, \PDO::FETCH_COLUMN);
+        return (bool) $this->connection->fetch($sql, $properties, \PDO::FETCH_COLUMN);
     }
 
     /**
@@ -118,13 +116,10 @@ class UserModel
      */
     public function getUser(int $id)
     {
-        $sql = 'select * from users where id = :id';
+        $sql = 'SELECT * FROM users WHERE id = :id';
         $user = $this->connection->fetch($sql, ['id' => $id]);
-        if ($user) {
-            $user['roles'] = json_decode($user['roles']);
-        }
 
-        return $user?:null;
+        return $user ?: null;
     }
 
     /**
@@ -134,13 +129,10 @@ class UserModel
      */
     public function findByLogin($login)
     {
-        $sql = 'select * from users where login=:login';
+        $sql = 'SELECT * FROM users WHERE login=:login';
         $user = $this->connection->fetch($sql, ['login' => $login]);
-        if ($user) {
-            $user['roles'] = json_decode($user['roles']);
-        }
 
-        return $user?:null;
+        return $user ?: null;
     }
 
     /**
@@ -162,17 +154,25 @@ class UserModel
      */
     private function preparePassword(array $user): array
     {
-        if($user['plain_password']){
-            $password = $user['password']??null;
-            if($password){
-                $salt =$this->passwordHelper->getSaltPart($password);
-            }else{
+        if ($user['plain_password']) {
+            $password = $user['password'] ?? null;
+            if ($password) {
+                $salt = $this->passwordHelper->getSaltPart($password);
+            } else {
                 $salt = $this->stringBuilder->build(5);
             }
-            $hash = $this->passwordHelper->getHash($user['plain_password'],$salt);
-            $user['password'] = $this->passwordHelper->createToken($salt,$hash);
+            $hash = $this->passwordHelper->getHash($user['plain_password'], $salt);
+            $user['password'] = $this->passwordHelper->createToken($salt, $hash);
         }
         unset($user['plain_password']);
+
         return $user;
+    }
+
+    public function getCountOfAdmins()
+    {
+        $sql = 'SELECT count(id) FROM users WHERE role =:role';
+
+        return $this->connection->fetch($sql, ['role' => RolesEnum::ADMIN])['count(id)'];
     }
 }

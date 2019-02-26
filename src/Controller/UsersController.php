@@ -8,6 +8,7 @@
 
 namespace Controller;
 
+use Core\MessageBag;
 use Core\Response\RedirectResponse;
 use Core\Response\Response;
 use Core\Request\Request;
@@ -36,17 +37,24 @@ class UsersController
     private $securityService;
 
     /**
+     * @var MessageBag
+     */
+    private $messageBag;
+
+    /**
      * UsersController constructor.
      *
      * @param UserModel       $user
      * @param Renderer        $renderer
      * @param SecurityService $securityService
+     * @param MessageBag      $messageBag
      */
-    public function __construct(UserModel $user, Renderer $renderer, SecurityService $securityService)
+    public function __construct(UserModel $user, Renderer $renderer, SecurityService $securityService, MessageBag $messageBag)
     {
         $this->userModel = $user;
         $this->renderer = $renderer;
         $this->securityService = $securityService;
+        $this->messageBag = $messageBag;
     }
 
     /**
@@ -93,8 +101,8 @@ class UsersController
      */
     public function create(Request $request)
     {
-        $roles = $this->securityService->getRoles();
-        $isAdmin = in_array('admin',$roles,true);
+        $role = $this->securityService->getRole();
+        $isAdmin = $role === 'admin';
 
         $form = new UserForm($this->userModel);
         if ($request->getMethod() === Request::POST) {
@@ -118,8 +126,8 @@ class UsersController
      */
     public function edit(Request $request)
     {
-        $roles = $this->securityService->getRoles();
-        $isAdmin = in_array('admin',$roles,true);
+        $role = $this->securityService->getRole();
+        $isAdmin = in_array('admin',$role,true);
 
         $id = $request->get('id');
         $user = $this->userModel->getUser($id);
@@ -147,10 +155,22 @@ class UsersController
      */
     public function delete(Request $request): RedirectResponse
     {
-        $roles = $this->securityService->getRoles();
+        $role = $this->securityService->getRole();
 
         $id = $request->get('id');
-        $this->userModel->delete($id);
+
+        if(!$this->userModel->getUser($id)){
+            throw new Exception('User not exist');
+        }
+
+        try{
+            $this->userModel->delete($id);
+        }catch (\LogicException $exception){
+            $this->messageBag->addError($exception->getMessage());
+            return new RedirectResponse('/users');
+        }
+
+        $this->messageBag->addMessage('User deleted');
 
         return new RedirectResponse('/users');
     }

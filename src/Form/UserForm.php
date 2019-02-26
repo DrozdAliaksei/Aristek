@@ -41,7 +41,7 @@ class UserForm
         $this->data['login'] = $request->get('login');
         $this->data['plain_password'] = $request->get('plain_password');
         $this->data['plain_password_confirm'] = $request->get('plain_password_confirm');
-        $this->data['roles'] = (array) $request->get('roles', []);
+        $this->data['role'] =  $request->get('role');
 
         $id = $this->data['id'] ?? null;
         if ($this->userModel->checkLogin($this->data['login'], $id)) {
@@ -54,10 +54,17 @@ class UserForm
         } elseif ($this->data['plain_password'] !== $this->data['plain_password_confirm']) {
             $this->violations['plain_password_confirm'] = 'Password conformation doesn\'t match password';
         }
-        if (!$this->data['roles']) {
-            $this->violations['roles'] = 'At least, one role is required';
-        } elseif (array_diff($this->data['roles'], RolesEnum::getAll())) {
-            $this->violations['roles'] = 'Invalid roles';
+        if (!$this->data['role']) {
+            $this->violations['role'] = 'Role is required';
+        } elseif (array_diff($this->data['role'], RolesEnum::getAll())) {
+            $this->violations['role'] = 'Invalid role';
+        }
+        if ($id) {
+            if ($this->userModel->getUser($id)['role'] === RolesEnum::ADMIN &&
+                $this->data['role'] !== RolesEnum::ADMIN &&
+                (int) $this->userModel->getCountOfAdmins() === 1) {
+                $this->violations['admin'] = 'At least must be 1 admin';
+            }
         }
     }
 

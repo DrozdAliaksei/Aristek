@@ -48,8 +48,8 @@ class RoleMiddleware implements MiddlewareInterface
      */
     public function handle(Route $route, Request $request)
     {
-        $roles = $this->securityService->getRoles();
-        $isAuthenticated = $this->isAuthenticated($request->getPath(), $roles);
+        $role = $this->securityService->getRole();
+        $isAuthenticated = $this->isAuthenticated($request->getPath(), $role);
         if ($isAuthenticated === false) {
             throw new UnauthorizedException();
         }
@@ -57,11 +57,11 @@ class RoleMiddleware implements MiddlewareInterface
         return null;
     }
 
-    private function isAuthenticated(string $path, array $roles)
+    private function isAuthenticated(string $path, string $role)
     {
         foreach ($this->routeSecurity as $pattern => $routeRoles) {
             if (preg_match(sprintf('#%s#', $pattern), $path)) {
-                return count(array_intersect($roles, $routeRoles)) > 0;
+                return in_array($role, $routeRoles);
             }
         }
 

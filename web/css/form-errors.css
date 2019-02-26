@@ -1,0 +1,14 @@
+.errors-wrap {
+    display: flex;
+    height: 20px;
+    justify-content: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: blueviolet;
+}
+
+.error-item {
+    font-size: 17px;
+    font-weight: bold;
+    color: wheat;
+}

@@ -110,22 +110,27 @@ class SecurityService
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function getRoles(): array
+    public function getRole(): string
     {
         if ($this->isAuthorized()) {
-            return $this->session->get('user')['roles'];
+            return $this->session->get('user')['role'];
         }
 
-        return [];
+        return '';
     }
 
     /**
-     * @return array|null
+     * @return array|mixed
      */
     public function getUser()
     {
-        return $this->session->get('user');
+
+        if ($this->isAuthorized()) {
+            return $this->session->get('user');
+        }
+
+        return '';
     }
 }

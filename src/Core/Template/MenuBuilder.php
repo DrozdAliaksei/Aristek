@@ -8,6 +8,7 @@
 
 namespace Core\Template;
 
+use Enum\RolesEnum;
 use Service\SecurityService;
 
 class MenuBuilder
@@ -48,15 +49,14 @@ class MenuBuilder
     private function getItems() : array
     {
         $userMenu = [];
-        $role = $this->securityService->getRoles();
+        $role = $this->securityService->getRole();
 
-        if (in_array('admin', $role, true)) {
+        if (RolesEnum::ADMIN === $role) {
             return $this->menu;
         }
 
         foreach ($this->menu as $menuItem){
-            $access = array_intersect($role,$menuItem['roles']);
-            if(count($access)>0){
+            if(in_array($role, $menuItem['roles'])){
                 $userMenu[]=['url' => $menuItem['url'], 'title' => $menuItem['title']];
             }
         }

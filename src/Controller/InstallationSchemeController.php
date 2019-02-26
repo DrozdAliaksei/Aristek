@@ -70,11 +70,11 @@ class InstallationSchemeController
      */
     public function list(/* Request $request */): Response
     {
-        $roles = $this->securityService->getRoles();
-        $schems = $this->schemeModel->getSchemesAvailableToRoles($roles);
+        $role = $this->securityService->getRole();
+        $schems = $this->schemeModel->getSchemesAvailableToRoles($role); //TODO rewrite for one role
         $path = 'InstallationScheme/list.php';
 
-        return new Response($this->renderer->render($path, ['schems' => $schems, 'roles' => $roles]));
+        return new Response($this->renderer->render($path, ['schems' => $schems, 'role' => $role]));
     }
 
     /**

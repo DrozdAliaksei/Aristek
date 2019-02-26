@@ -9,7 +9,8 @@ return [
     \Controller\UsersController::class              => [
         \Model\UserModel::class,
         \Core\Template\Renderer::class,
-        \Service\SecurityService::class
+        \Service\SecurityService::class,
+        \Core\MessageBag::class
     ],
     \Controller\RoomsController::class              => [\Model\RoomModel::class, \Core\Template\Renderer::class],
     \Controller\EquipmentsController::class         => [\Model\EquipmentModel::class, \Core\Template\Renderer::class],
@@ -22,7 +23,12 @@ return [
     ],
     \Core\DB\Connection::class                      => ['%database%'],
     \Core\Template\MenuBuilder::class               => ['%menu%', \Service\SecurityService::class],
-    \Core\Template\Renderer::class                  => ['%template_dir%', \Core\Template\MenuBuilder::class],
+    \Core\MessageBag::class                         => [\Core\HTTP\SessionProvider::class],
+    \Core\Template\Renderer::class                  => [
+        '%template_dir%',
+        \Core\Template\MenuBuilder::class,
+        \Core\MessageBag::class,
+    ],
     \Core\Security\Guardian::class                  => [
         \Middleware\GuestMiddleware::class,
         \Middleware\RoleMiddleware::class,

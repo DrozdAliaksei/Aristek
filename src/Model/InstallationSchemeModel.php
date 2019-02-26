@@ -9,6 +9,7 @@
 namespace Model;
 
 use Core\DB\Connection;
+use Enum\RolesEnum;
 
 class InstallationSchemeModel
 {
@@ -196,28 +197,24 @@ class InstallationSchemeModel
     }
 
     /**
-     * @param array $roles
+     * @param string $role
      *
      * @return array
      */
-    public function getSchemesAvailableToRoles(array $roles): array
+    public function getSchemesAvailableToRoles(string $role): array
     {
-        if (in_array('admin', $roles, true)) {
+        if (RolesEnum::ADMIN === $role) {
             return $this->getList();
         }
-        $in = implode(',', array_fill(0, count($roles), '?'));
-
-        $sql = sprintf(
+        $sql =
             'SELECT installation_scheme.id,rooms.name AS room_name,equipments.name AS equipment_name,displayable_name,status
             FROM installation_scheme
             INNER JOIN rooms ON installation_scheme.room_id = rooms.id
             INNER JOIN equipments ON installation_scheme.equipment_id = equipments.id
             INNER JOIN installation_scheme_roles ON installation_scheme.id = installation_scheme_roles.installation_scheme_id
-            WHERE installation_scheme_roles.role IN (%s)
-            GROUP BY installation_scheme.id',
-            $in
-        );
+            WHERE installation_scheme_roles.role =:role
+            GROUP BY installation_scheme.id';
 
-        return $this->connection->fetchAll($sql, $roles);
+        return $this->connection->fetchAll($sql, ['role' => $role]);
     }
 }

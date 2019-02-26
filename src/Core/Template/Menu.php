@@ -8,7 +8,7 @@
 
 namespace Core\Template;
 
-class Menu implements \Iterator //TODO implement
+class Menu implements \Iterator
 {
     /**
      * @var array

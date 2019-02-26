@@ -8,6 +8,7 @@
 
 namespace Core\Template;
 
+use Core\MessageBag;
 use Core\Response\TemplateResource;
 
 class Renderer
@@ -23,15 +24,22 @@ class Renderer
     private $menuBuilder;
 
     /**
+     * @var MessageBag
+     */
+    private $messageBag;
+
+    /**
      * Rederer constructor.
      *
      * @param string      $viewDir
      * @param MenuBuilder $menuBuilder
+     * @param MessageBag  $messageBag
      */
-    public function __construct(string $viewDir , MenuBuilder $menuBuilder)
+    public function __construct(string $viewDir , MenuBuilder $menuBuilder,MessageBag $messageBag)
     {
         $this->viewDir = $viewDir;
         $this->menuBuilder = $menuBuilder;
+        $this->messageBag = $messageBag;
     }
 
     /**
@@ -44,6 +52,7 @@ class Renderer
     public function render(string $path, array $properties)
     {
         $properties['menu'] = $this->menuBuilder->createMenu();
+        $properties['flash'] = ['messages' => $this->messageBag->pullMessages(),'errors' => $this->messageBag->pullErrors()];
         return new TemplateResource($this->getRealPath($path),$properties);
     }
 
