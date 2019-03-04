@@ -66,7 +66,7 @@ class Renderer
     {
         $realPath = $this->viewDir.'/'.$path;
         if(!file_exists($realPath)){
-            throw new \RuntimeException(sprintf('Template %s is not found', $path));
+            throw new \RuntimeException(sprintf('Template %s is not found', $path)); //TODO check
         }
         return $realPath;
     }

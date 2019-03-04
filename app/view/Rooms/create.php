@@ -23,8 +23,10 @@
   <div class="form">
     <form class="in-form" method="POST">
       <!-- return field value -->
-      <input type="text" name="name" placeholder="name" required value="<?php echo $form->getData()['name']; ?>">
-      <input type="text" name="description" placeholder="description" required value="<?php echo $form->getData(
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" placeholder="name" required value="<?php echo $form->getData()['name']; ?>">
+      <label for="description">Description</label>
+      <input type="text" id="description" name="description" placeholder="description" required value="<?php echo $form->getData(
       )['description']; ?>">
       <button type="submit" name="submit">Accept</button>
     </form>

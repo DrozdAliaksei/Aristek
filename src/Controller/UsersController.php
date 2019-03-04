@@ -8,6 +8,7 @@
 
 namespace Controller;
 
+use Core\HTTP\Exception\NotFoundException;
 use Core\MessageBag;
 use Core\Response\RedirectResponse;
 use Core\Response\Response;
@@ -49,8 +50,12 @@ class UsersController
      * @param SecurityService $securityService
      * @param MessageBag      $messageBag
      */
-    public function __construct(UserModel $user, Renderer $renderer, SecurityService $securityService, MessageBag $messageBag)
-    {
+    public function __construct(
+        UserModel $user,
+        Renderer $renderer,
+        SecurityService $securityService,
+        MessageBag $messageBag
+    ) {
         $this->userModel = $user;
         $this->renderer = $renderer;
         $this->securityService = $securityService;
@@ -77,20 +82,21 @@ class UsersController
     public function profile(Request $request)
     {
         $form = new ProfileForm($this->userModel);
-        if($request->getMethod() === Request::POST){
+        if ($request->getMethod() === Request::POST) {
             $form->handleRequest($request);
-            if($form->isValid()){
+            if ($form->isValid()) {
                 $id = $this->securityService->getUser()['id'];
-                $this->userModel->changePassword($form->getData(),$id);
+                $this->userModel->changePassword($form->getData(), $id);
+                $this->messageBag->addMessage('Password updated');
 
-                return new RedirectResponse('/users');
+                return new RedirectResponse('/profile');
             }
         }
 
         $user = $this->securityService->getUser();
         $path = 'Users/profile.php';
 
-        return new Response($this->renderer->render($path,['user' => $user, 'form' =>$form]));
+        return new Response($this->renderer->render($path, ['user' => $user, 'form' => $form]));
     }
 
     /**
@@ -109,6 +115,7 @@ class UsersController
             $form->handleRequest($request);
             if ($form->isValid()) {
                 $this->userModel->create($form->getData());
+                $this->messageBag->addMessage('User created');
 
                 return new RedirectResponse('/users');
             }
@@ -127,18 +134,19 @@ class UsersController
     public function edit(Request $request)
     {
         $role = $this->securityService->getRole();
-        $isAdmin = in_array('admin',$role,true);
+        $isAdmin = $role === 'admin';
 
         $id = $request->get('id');
         $user = $this->userModel->getUser($id);
         if ($user === null) {
-            throw new Exception('User not found');
+            throw new NotFoundException('User not found');
         }
         $form = new UserForm($this->userModel, $user);
         if ($request->getMethod() === Request::POST) {
             $form->handleRequest($request);
             if ($form->isValid()) {
                 $this->userModel->edit($form->getData(), $id);
+                $this->messageBag->addMessage('User was edited');
 
                 return new RedirectResponse('/users');
             }
@@ -155,18 +163,17 @@ class UsersController
      */
     public function delete(Request $request): RedirectResponse
     {
-        $role = $this->securityService->getRole();
-
         $id = $request->get('id');
 
-        if(!$this->userModel->getUser($id)){
-            throw new Exception('User not exist');
+        if (!$this->userModel->getUser($id)) {
+            throw new NotFoundException('User not exist');
         }
 
-        try{
+        try {
             $this->userModel->delete($id);
-        }catch (\LogicException $exception){
+        } catch (\LogicException $exception) {
             $this->messageBag->addError($exception->getMessage());
+
             return new RedirectResponse('/users');
         }
 

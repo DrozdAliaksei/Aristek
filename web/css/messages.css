@@ -1,0 +1,26 @@
+.message-box {
+    display: flex;
+    height: 20px;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: blueviolet;
+}
+
+.messages-error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 17px;
+    font-weight: bold;
+    color: red;
+}
+
+.messages-messages {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 17px;
+    font-weight: bold;
+    color: greenyellow;
+}

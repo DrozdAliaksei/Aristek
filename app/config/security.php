@@ -12,6 +12,6 @@ return [
     '^/users' => [RolesEnum::ADMIN, RolesEnum::USER],
     '^/rooms' => [RolesEnum::ADMIN],
     '^/equipments' => [RolesEnum::ADMIN, RolesEnum::USER],
-    '^/installation_scheme' => [RolesEnum::ADMIN, RolesEnum::USER, RolesEnum::VISITOR],
+    '^/installation-scheme' => [RolesEnum::ADMIN, RolesEnum::USER, RolesEnum::VISITOR],
     '^/logout$' => [RolesEnum::ADMIN, RolesEnum::USER, RolesEnum::VISITOR],
 ];

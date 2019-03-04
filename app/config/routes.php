@@ -26,8 +26,8 @@ Router::add('/equipments/create', \Controller\EquipmentsController::class, 'crea
 Router::add('/equipments/{id}/edit', \Controller\EquipmentsController::class, 'edit', ['id' => '\d+']);
 Router::add('/equipments/{id}/delete', \Controller\EquipmentsController::class, 'delete', ['id' => '\d+']);
 
-Router::add('/installation_scheme', \Controller\InstallationSchemeController::class, 'list');
-Router::add('/installation_scheme/create', \Controller\InstallationSchemeController::class, 'create');
-Router::add('/installation_scheme/{id}/edit', \Controller\InstallationSchemeController::class, 'edit', ['id' => '\d+']);
-Router::add('/installation_scheme/{id}/delete', \Controller\InstallationSchemeController::class, 'delete', ['id' => '\d+']);
-Router::add('/installation_scheme/{id}/{status}/change_status', \Controller\InstallationSchemeController::class, 'changeStatus', ['id' => '\d+','status' => '\d+']);
+Router::add('/installation-scheme', \Controller\InstallationSchemeController::class, 'list');
+Router::add('/installation-scheme/create', \Controller\InstallationSchemeController::class, 'create');
+Router::add('/installation-scheme/{id}/edit', \Controller\InstallationSchemeController::class, 'edit', ['id' => '\d+']);
+Router::add('/installation-scheme/{id}/delete', \Controller\InstallationSchemeController::class, 'delete', ['id' => '\d+']);
+Router::add('/installation-scheme/{id}/{status}/change-status', \Controller\InstallationSchemeController::class, 'changeStatus', ['id' => '\d+','status' => '\d+']);

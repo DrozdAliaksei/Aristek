@@ -3,11 +3,22 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
-    position: fixed;
+    position: absolute;
+    padding-top: 10px;
     bottom: 0;
     width: 100%;
 }
 .footer-text {
     color: rgb(84, 92, 119);
     font-weight: bold;
+}
+.v2footer{
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding-top: 10px;
+    bottom: 0;
+    width: 100%;
 }

@@ -23,19 +23,23 @@
   <div class="form">
     <form class="in-form" method="POST">
       <!-- return field value -->
-      <input type="text" name="login" placeholder="login" required value="<?php echo $form->getData()['login']; ?>">
-      <input type="password" name="plain_password" placeholder="password" <?php if ($isCreate) {
+      <label for="login">Login</label>
+      <input type="text" name="login" id="login" required value="<?php echo $form->getData()['login']; ?>">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="plain_password" <?php if ($isCreate) {
           echo 'required';
       } ?> >
-      <input type="password" name="plain_password_confirm" placeholder="password" <?php if ($isCreate) {
+      <label for="confirm_password">Confirm password</label>
+      <input type="password" id="confirm_password" name="plain_password_confirm" <?php if ($isCreate) {
           echo 'required';
       } ?> >
-      <select name="role" required >
+      <label for="role">Role</label>
+      <select name="role" id="role" required>
         <option value=""></option>
           <?php foreach (\Enum\RolesEnum::getAll() as $role) { ?>
             <option value="<?php echo $role ?>"
                 <?php
-                if ($this->data['role'] === false && $role === 'admin') {
+                if ($this->data['role'] == false && $role == 'admin') {
                     continue;
                 }
                 if ($form->getData()['role'] === $role) {

@@ -8,6 +8,8 @@
 
 namespace Controller;
 
+use Core\HTTP\Exception\NotFoundException;
+use Core\MessageBag;
 use Core\Response\RedirectResponse;
 use Core\Response\Response;
 use Core\Request\Request;
@@ -24,14 +26,17 @@ class InstallationSchemeController
      * @var InstallationSchemeModel
      */
     private $schemeModel;
+
     /**
      * @var RoomModel
      */
     private $roomModel;
+
     /**
      * @var EquipmentModel
      */
     private $equipmentModel;
+
     /**
      * @var SecurityService
      */
@@ -43,6 +48,11 @@ class InstallationSchemeController
     private $renderer;
 
     /**
+     * @var MessageBag
+     */
+    private $messageBag;
+
+    /**
      * InstallationSchemeController constructor.
      *
      * @param InstallationSchemeModel $schemeModel
@@ -50,19 +60,22 @@ class InstallationSchemeController
      * @param EquipmentModel          $equipmentModel
      * @param SecurityService         $securityService
      * @param Renderer                $renderer
+     * @param MessageBag              $messageBag
      */
     public function __construct(
         InstallationSchemeModel $schemeModel,
         RoomModel $roomModel,
         EquipmentModel $equipmentModel,
         SecurityService $securityService,
-        Renderer $renderer
+        Renderer $renderer,
+        MessageBag $messageBag
     ) {
         $this->schemeModel = $schemeModel;
         $this->roomModel = $roomModel;
         $this->equipmentModel = $equipmentModel;
         $this->securityService = $securityService;
         $this->renderer = $renderer;
+        $this->messageBag = $messageBag;
     }
 
     /**
@@ -90,8 +103,9 @@ class InstallationSchemeController
             $form->handleRequest($request);
             if ($form->isValid()) {
                 $this->schemeModel->create($form->getData());
+                $this->messageBag->addMessage('Scheme created');
 
-                return new RedirectResponse('/installation_scheme');
+                return new RedirectResponse('/installation-scheme');
             }
         }
         $path = 'InstallationScheme/create.php';
@@ -115,15 +129,16 @@ class InstallationSchemeController
         $id = $request->get('id');
         $scheme = $this->schemeModel->getScheme($id);
         if ($scheme === null) {
-            throw new \RuntimeException('Scheme not found');
+            throw new NotFoundException('Scheme not found');
         }
         $form = new InstallationSchemeForm($this->schemeModel, $scheme);
         if ($request->getMethod() === Request::POST) {
             $form->handleRequest($request);
             if ($form->isValid()) {
                 $this->schemeModel->edit($form->getData(), $id);
+                $this->messageBag->addMessage('Scheme updated');
 
-                return new RedirectResponse('/installation_scheme');
+                return new RedirectResponse('/installation-scheme');
             }
         }
         $path = 'InstallationScheme/create.php';
@@ -147,9 +162,14 @@ class InstallationSchemeController
     public function delete(Request $request): RedirectResponse
     {
         $id = $request->get('id');
+        $scheme = $this->schemeModel->getScheme($id);
+        if ($scheme === null) {
+            throw new NotFoundException('Scheme not found');
+        }
         $this->schemeModel->delete($id);
+        $this->messageBag->addMessage('Scheme deleted');
 
-        return new RedirectResponse('/installation_scheme');
+        return new RedirectResponse('/installation-scheme');
     }
 
     /**
@@ -160,6 +180,10 @@ class InstallationSchemeController
     public function changeStatus(Request $request): RedirectResponse
     {
         $id = $request->get('id');
+        $scheme = $this->schemeModel->getScheme($id);
+        if ($scheme === null) {
+            throw new NotFoundException('Scheme not found');
+        }
         $status = $request->get('status');
 
         if ($status == 1) {
@@ -169,6 +193,6 @@ class InstallationSchemeController
         }
         $this->schemeModel->changeStatus($id, $status);
 
-        return new RedirectResponse('/installation_scheme');
+        return new RedirectResponse('/installation-scheme');
     }
 }

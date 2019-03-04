@@ -6,7 +6,7 @@
  * Time: 17.54
  */
 
-
+use Core\HTTP\Exception\HttpExceptionInterface;
 use Core\Request\RequestFactory;
 
 require __DIR__.'/../app/autoload.php';
@@ -16,6 +16,11 @@ try {
     $request = RequestFactory::createRequest();
     $response = $kernel->createResponse($request);
     $response->send();
-} catch (\Exception $exception) {
+}catch (HttpExceptionInterface $exception){
+    echo $exception;
+    $response = $kernel->getContainer()->get('')->createResponse($exception);
+    $response->send();
+}
+catch (\Exception $exception) {
     echo $exception->getMessage();
 }

@@ -10,7 +10,7 @@ namespace Core\HTTP\Exception;
 
 use Throwable;
 
-class RequestException extends \Exception
+class RequestException extends \Exception implements  HttpExceptionInterface
 {
     public function __construct(string $message = '', int $code = 400, Throwable $previous = null)
     {

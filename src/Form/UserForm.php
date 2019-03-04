@@ -41,18 +41,20 @@ class UserForm
         $this->data['login'] = $request->get('login');
         $this->data['plain_password'] = $request->get('plain_password');
         $this->data['plain_password_confirm'] = $request->get('plain_password_confirm');
-        $this->data['role'] =  $request->get('role');
+        $this->data['role'] = $request->get('role');
 
         $id = $this->data['id'] ?? null;
         if ($this->userModel->checkLogin($this->data['login'], $id)) {
             $this->violations['login'] = 'Such login exists';
         }
-        if (strlen($this->data['plain_password']) < 5) {
-            $this->violations['plain_password'] = 'Password is too short';
-        } elseif (strlen($this->data['plain_password']) > 30) {
-            $this->violations['plain_password'] = 'Password is too long';
-        } elseif ($this->data['plain_password'] !== $this->data['plain_password_confirm']) {
-            $this->violations['plain_password_confirm'] = 'Password conformation doesn\'t match password';
+        if (!$id) {
+            if (strlen($this->data['plain_password']) < 5) {
+                $this->violations['plain_password'] = 'Password is too short';
+            } elseif (strlen($this->data['plain_password']) > 30) {
+                $this->violations['plain_password'] = 'Password is too long';
+            } elseif ($this->data['plain_password'] !== $this->data['plain_password_confirm']) {
+                $this->violations['plain_password_confirm'] = 'Password conformation doesn\'t match password';
+            }
         }
         if (!$this->data['role']) {
             $this->violations['role'] = 'Role is required';

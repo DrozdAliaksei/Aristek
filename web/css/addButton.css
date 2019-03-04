@@ -1,22 +1,21 @@
-.add{
+.add {
     display: flex;
     width: 100%;
+    justify-content: flex-end;
 }
-.add.button{
+
+.add a {
     text-decoration: none;
-    width: 100%;
-    margin: 0px 10px 0px 10px;
     height: 20px;
+    font-weight: bold;
+    font-size: 17px;
+    width: auto;
+    padding: 10px;
+    margin: 10px;
+    margin-right: 7.5%;
     background-color: rgb(238, 238, 238);
     display: flex;
-    float: right;
-    align-items: center;
-    color:rgb(72,72,72);
+    color: #ffffff;
     border-radius: 5px;
-}
-.add th{
-    border: none;
-}
-.add tr{
-    border: none;
+    background: #414c6f;
 }

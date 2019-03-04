@@ -6,12 +6,11 @@
   <title>Profile</title>
   <link href="/css/wrap.css" type="text/css" rel="stylesheet">
   <link href="/css/title.css" type="text/css" rel="stylesheet">
-  <link href="/css/addButton.css" type="text/css" rel="stylesheet">
   <link href="/css/menu.css" type="text/css" rel="stylesheet">
   <link href="/css/footer.css" type="text/css" rel="stylesheet">
-  <link href="/css/table.css" type="text/css" rel="stylesheet">
-  <link href="/css/in-form.css" type="text/css" rel="stylesheet">
+  <link href="/css/profile.css" type="text/css" rel="stylesheet">
   <link href="/css/form-errors.css" type="text/css" rel="stylesheet">
+  <link href="/css/messages.css" type="text/css" rel="stylesheet">
 
 </head>
 <body>
@@ -22,33 +21,38 @@
     <?php require __DIR__.'/../Core/menu.php'; ?>
     <?php require __DIR__.'/../Core/form_errors.php'; ?>
 
-  <table class="table" width="100%" cellspacing="0" style="text-align: center">
-    <thead>
-    <tr>
-      <th>Id</th>
-      <th>Login</th>
-      <th>Roles</th>
-    </tr>
-    </thead>
-    <tbody>
-    <?php $user = $this->data['user']; ?>
-    <tr>
-      <td><?php echo $user['id']; ?></td>
-      <td><?php echo $user['login']; ?></td>
-      <td><?php echo $user['role']; ?></td>
-    </tr>
-    </tbody>
-  </table>
-  <div class="form">
-    <form class="in-form" method="post">
-      <input type="password" name="plain_password" placeholder="password">
-      <input type="password" name="plain_password_confirm" placeholder="password">
-      <button type="submit" name="submit">Change password</button>
-    </form>
+  <div class="profile">
+
+    <div class="profile-info">
+      <h1>Profile info</h1>
+        <?php $user = $this->data['user']; ?>
+      <div class="info-item">
+        <h2>Login:</h2>
+        <div class="user-info"><?php echo $user['login']; ?></div>
+      </div>
+      <div class="info-item">
+      <h2>Role:</h2>
+        <div class="user-info"><?php echo $user['role']; ?></div>
+      </div>
+    </div>
+
+      <?php require __DIR__.'/../Core/messages.php'; ?>
+
+    <div class="form">
+      <form class="profile-form" method="post">
+        <h1>Change password</h1>
+        <label for="password">Password</label>
+        <input type="password" id="password" name="plain_password" placeholder="password">
+        <label for="confirm-password">Confirm password</label>
+        <input type="password" id="confirm-password" name="plain_password_confirm" placeholder="confirm password">
+        <button type="submit" name="submit">Change password</button>
+      </form>
+    </div>
+
   </div>
-  <footer>
-      <?php require __DIR__.'/../Core/footer.php'; ?>
-  </footer>
+
+    <?php require __DIR__.'/../Core/footer.php'; ?>
+
 </div>
 </body>
 </html>

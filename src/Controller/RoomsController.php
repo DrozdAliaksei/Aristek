@@ -8,6 +8,8 @@
 
 namespace Controller;
 
+use Core\HTTP\Exception\NotFoundException;
+use Core\MessageBag;
 use Core\Response\RedirectResponse;
 use Core\Response\Response;
 use Core\Request\Request;
@@ -28,15 +30,22 @@ class RoomsController
     private $renderer;
 
     /**
+     * @var MessageBag
+     */
+    private $messageBag;
+
+    /**
      * RoomsController constructor.
      *
-     * @param RoomModel $room
-     * @param Renderer  $renderer
+     * @param RoomModel  $room
+     * @param Renderer   $renderer
+     * @param MessageBag $messageBag
      */
-    public function __construct(RoomModel $room, Renderer $renderer)
+    public function __construct(RoomModel $room, Renderer $renderer, MessageBag $messageBag)
     {
         $this->roomModel = $room;
         $this->renderer = $renderer;
+        $this->messageBag = $messageBag;
     }
 
     /**
@@ -63,6 +72,7 @@ class RoomsController
             $form->handleRequest($request);
             if ($form->isValid()) {
                 $this->roomModel->create($form->getData());
+                $this->messageBag->addMessage('Room created');
 
                 return new RedirectResponse('/rooms');
             }
@@ -77,13 +87,14 @@ class RoomsController
         $id = $request->get('id');
         $room = $this->roomModel->getRoom($id);
         if ($room === null) {
-            throw new \RuntimeException('Room not found');
+            throw new NotFoundException('Room not found');
         }
         $form = new RoomForm($this->roomModel, $room);
         if ($request->getMethod() === Request::POST) {
             $form->handleRequest($request);
             if ($form->isValid()) {
                 $this->roomModel->edit($form->getData(), $id);
+                $this->messageBag->addMessage('Room updated');
 
                 return new RedirectResponse('/rooms');
             }
@@ -101,7 +112,12 @@ class RoomsController
     public function delete(Request $request): RedirectResponse
     {
         $id = $request->get('id');
+        $room = $this->roomModel->getRoom($id);
+        if ($room === null) {
+            throw new NotFoundException('Room not found');
+        }
         $this->roomModel->delete($id);
+        $this->messageBag->addMessage('Room deleted');
 
         return new RedirectResponse('/rooms');
     }

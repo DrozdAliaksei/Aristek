@@ -12,6 +12,7 @@ use Core\Response\Response;
 use Core\Router\Route;
 use Core\Router\Router;
 use Core\Security\Guardian;
+use Core\ServiceContainer;
 
 class Kernel
 {
@@ -31,7 +32,7 @@ class Kernel
     public function __construct()
     {
         $this->config = require __DIR__.'/config/config.php';
-        $this->container = \Core\ServiceContainer::getInstance($this->config);
+        $this->container = ServiceContainer::getInstance($this->config);
     }
 
     /**
@@ -50,22 +51,29 @@ class Kernel
     public function createResponse(Request $request): Response
     {
         $route = $this->getRoute($request);
+        $params = $route->getPathValues($request->getPath());
+        $request->setAttributes($params);
         /** @var Guardian $guardian */
         $guardian = $this->container->get(Guardian::class);
         if ($response = $guardian->handle($route, $request)) {
             return $response;
         }
         $controller = $this->getController($route);
-        $params = $route->getPathValues($request->getPath());
-        $request->setAttributes($params);
+
 
         return call_user_func([$controller, $route->getMethod()], $request);
     }
 
+    public function getContainer(): ServiceContainer
+    {
+        return $this->container;
+    }
+
+
     /**
      * @param Request $request
      *
-     * @return Route|null
+     * @return Route
      */
     private function getRoute(Request $request): Route
     {

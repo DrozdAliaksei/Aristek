@@ -8,6 +8,8 @@
 
 namespace Controller;
 
+use Core\HTTP\Exception\NotFoundException;
+use Core\MessageBag;
 use Core\Response\RedirectResponse;
 use Core\Response\Response;
 use Core\Request\Request;
@@ -28,15 +30,22 @@ class EquipmentsController
     private $renderer;
 
     /**
+     * @var MessageBag
+     */
+    private $messageBag;
+
+    /**
      * EquipmentsController constructor.
      *
      * @param EquipmentModel $equipment
      * @param Renderer       $renderer
+     * @param MessageBag     $messageBag
      */
-    public function __construct(EquipmentModel $equipment, Renderer $renderer)
+    public function __construct(EquipmentModel $equipment, Renderer $renderer, MessageBag $messageBag)
     {
         $this->equipmentModel = $equipment;
         $this->renderer = $renderer;
+        $this->messageBag = $messageBag;
     }
 
     /**
@@ -62,6 +71,7 @@ class EquipmentsController
             $form->handleRequest($request);
             if ($form->isValid()) {
                 $this->equipmentModel->create($form->getData());
+                $this->messageBag->addMessage('Equipment created');
 
                 return new RedirectResponse('/equipments');
             }
@@ -82,13 +92,14 @@ class EquipmentsController
         $id = $request->get('id');
         $equipment = $this->equipmentModel->getEquipment($id);
         if ($equipment === null) {
-            throw new \RuntimeException('Equipment not found');
+            throw new NotFoundException('Equipment not found');
         }
         $form = new EquipmentForm($this->equipmentModel, $equipment);
         if ($request->getMethod() === Request::POST) {
             $form->handleRequest($request);
             if ($form->isValid()) {
                 $this->equipmentModel->edit($form->getData(), $id);
+                $this->messageBag->addMessage('Equipment updated');
 
                 return new RedirectResponse('/equipments');
             }
@@ -106,7 +117,12 @@ class EquipmentsController
     public function delete(Request $request): RedirectResponse
     {
         $id = $request->get('id');
+        $equipment = $this->equipmentModel->getEquipment($id);
+        if ($equipment === null) {
+            throw new NotFoundException('Equipment not found');
+        }
         $this->equipmentModel->delete($id);
+        $this->messageBag->addMessage('Equipment deleted');
 
         return new RedirectResponse('/equipments');
     }

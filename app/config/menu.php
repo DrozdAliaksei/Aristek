@@ -19,7 +19,7 @@ return [
         'roles' => [RolesEnum::ADMIN],
     ],
     [
-        'url'   => '/installation_scheme',
+        'url'   => '/installation-scheme',
         'title' => 'Installation schemes',
         'roles' => [RolesEnum::ADMIN, RolesEnum::USER, RolesEnum::VISITOR],
     ],

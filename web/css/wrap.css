@@ -1,6 +1,8 @@
 .wrap{
+    margin: 0 auto;
     display: flex;
+    align-items: center;
     flex-direction: column;
     align-content: center;
-    width: 100%;
+    max-width: 1200px;
 }

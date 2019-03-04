@@ -10,16 +10,25 @@ return [
         \Model\UserModel::class,
         \Core\Template\Renderer::class,
         \Service\SecurityService::class,
-        \Core\MessageBag::class
+        \Core\MessageBag::class,
     ],
-    \Controller\RoomsController::class              => [\Model\RoomModel::class, \Core\Template\Renderer::class],
-    \Controller\EquipmentsController::class         => [\Model\EquipmentModel::class, \Core\Template\Renderer::class],
+    \Controller\RoomsController::class              => [
+        \Model\RoomModel::class,
+        \Core\Template\Renderer::class,
+        \Core\MessageBag::class,
+    ],
+    \Controller\EquipmentsController::class         => [
+        \Model\EquipmentModel::class,
+        \Core\Template\Renderer::class,
+        \Core\MessageBag::class,
+    ],
     \Controller\InstallationSchemeController::class => [
         \Model\InstallationSchemeModel::class,
         \Model\RoomModel::class,
         \Model\EquipmentModel::class,
         \Service\SecurityService::class,
         \Core\Template\Renderer::class,
+        \Core\MessageBag::class
     ],
     \Core\DB\Connection::class                      => ['%database%'],
     \Core\Template\MenuBuilder::class               => ['%menu%', \Service\SecurityService::class],

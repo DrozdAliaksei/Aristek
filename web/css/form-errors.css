@@ -1,6 +1,9 @@
 .errors-wrap {
     display: flex;
     height: 20px;
+    width: 50%;
+    border-radius: 5px;
+    margin: 10px 0 10px 0;
     justify-content: center;
     padding-top: 10px;
     padding-bottom: 10px;

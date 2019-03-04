@@ -10,6 +10,7 @@
   <link href="/css/menu.css" type="text/css" rel="stylesheet">
   <link href="/css/footer.css" type="text/css" rel="stylesheet">
   <link href="/css/table.css" type="text/css" rel="stylesheet">
+  <link href="/css/messages.css" type="text/css" rel="stylesheet">
 
 </head>
 <body>
@@ -21,23 +22,17 @@
     <?php require __DIR__.'/../Core/menu.php'; ?>
     <?php require __DIR__.'/../Core/messages.php'; ?>
 
+  <div class="add">
+      <?php if (in_array($this->data['role'], ['admin', 'user'])) { ?>
+        <a href="/installation-scheme/create" class="button">Add new scheme</a><?php } ?>
+  </div>
 
   <table class="table" width="100%" cellspacing="0" style="text-align: center">
     <thead>
-        <div class="add">
-            <?php if (in_array($this->data['role'], ['admin', 'user'])) { ?>
-          <tr>
-            <th>
-              <a href="/app.php/installation_scheme/create" class="button">Add new scheme</a>
-            <?php } ?>
-            </th>
-          </tr>
-        </div>
     <tr>
-      <th>Id</th>
       <th>Room</th>
       <th>Equipment</th>
-      <th>Displayable Name</th>
+      <th>Description</th>
       <th>Status</th>
       <th></th>
     </tr>
@@ -45,7 +40,6 @@
     <tbody>
     <?php foreach ($this->data['schems'] as $scheme) { ?>
       <tr>
-        <td><?php echo $scheme['id'] ?></td>
         <td><?php echo $scheme['room_name'] ?></td>
         <td><?php echo $scheme['equipment_name'] ?></td>
         <td><?php echo $scheme['displayable_name'] ?></td>
@@ -54,13 +48,14 @@
             } else {
                 echo "Off";
             } ?></td>
-        <td><div class="actions">
-          <a href="/app.php/installation_scheme/<?php echo $scheme['id']; ?>/<?php echo $scheme['status']; ?>/change_status" class="button">Change
-            Status</a>
-            <?php if (in_array($this->data['role'], ['admin', 'user'])) { ?>
-              <a href="/app.php/installation_scheme/<?php echo $scheme['id']; ?>/edit" class="button">Edit</a>
-              <a href="/app.php/installation_scheme/<?php echo $scheme['id']; ?>/delete" class="button">Delete</a>
-            <?php } ?>
+        <td>
+          <div class="actions">
+            <a href="/installation-scheme/<?php echo $scheme['id']; ?>/<?php echo $scheme['status']; ?>/change-status" class="button">Toggle
+              status</a>
+              <?php if (in_array($this->data['role'], ['admin', 'user'])) { ?>
+                <a href="/installation-scheme/<?php echo $scheme['id']; ?>/edit" class="button">Edit</a>
+                <a href="/installation-scheme/<?php echo $scheme['id']; ?>/delete" class="button">Delete</a>
+              <?php } ?>
           </div>
         </td>
       </tr>
