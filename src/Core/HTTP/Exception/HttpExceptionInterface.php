@@ -10,7 +10,13 @@ namespace Core\HTTP\Exception;
 
 interface HttpExceptionInterface
 {
-    public function getStatusCode(): int;
+    /**
+     * @return int
+     */
+    public function getCode();
 
-    public function getHeaders(): array;
+    /**
+     * @return string
+     */
+    public function getMessage();
 }

@@ -128,6 +128,7 @@ class InstallationSchemeController
     {
         $id = $request->get('id');
         $scheme = $this->schemeModel->getScheme($id);
+
         if ($scheme === null) {
             throw new NotFoundException('Scheme not found');
         }

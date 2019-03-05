@@ -10,7 +10,6 @@ namespace Core\Response;
 
 class Response
 {
-
     const NOT_FOUND = 404;
     const REDIRECT_FOUND = 302;
     const SUCCESS = 200;
@@ -40,6 +39,11 @@ class Response
     protected $headers;
 
     /**
+     * @var int
+     */
+    private $code;
+
+    /**
      * Response constructor.
      * @param ResourceInterface $resource
      * @param int $code
@@ -51,6 +55,7 @@ class Response
         $this->resource = $resource;
         array_unshift($headers, sprintf('HTTP/1.0 %d %s', $code, $this->getMessage($code)));
         $this->headers = $headers;
+        $this->code = $code;
     }
 
     public function send()

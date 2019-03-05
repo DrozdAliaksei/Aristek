@@ -57,4 +57,5 @@ return [
         \Model\UserModel::class,
         \Core\Security\PasswordHelper::class,
     ],
+    \Service\HttpExceptionRender::class => [\Core\Template\Renderer::class],
 ];

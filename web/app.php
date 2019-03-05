@@ -8,6 +8,7 @@
 
 use Core\HTTP\Exception\HttpExceptionInterface;
 use Core\Request\RequestFactory;
+use Service\HttpExceptionRender;
 
 require __DIR__.'/../app/autoload.php';
 $kernel = new Kernel();
@@ -17,8 +18,9 @@ try {
     $response = $kernel->createResponse($request);
     $response->send();
 }catch (HttpExceptionInterface $exception){
-    echo $exception;
-    $response = $kernel->getContainer()->get('')->createResponse($exception);
+    /** @var HttpExceptionRender $exceptionRenderer */
+    $exceptionRenderer = $kernel->getContainer()->get(HttpExceptionRender::class);
+    $response = $exceptionRenderer->createResponse($exception);
     $response->send();
 }
 catch (\Exception $exception) {

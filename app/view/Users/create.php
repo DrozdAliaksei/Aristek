@@ -53,9 +53,7 @@
       <button type="submit" name="submit">Accept</button>
     </form>
   </div>
-  <footer>
       <?php require __DIR__.'/../Core/footer.php'; ?>
-  </footer>
 </div>
 </body>
 </html>

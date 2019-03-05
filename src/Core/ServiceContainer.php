@@ -90,7 +90,7 @@ class ServiceContainer
                 if ($service instanceof InvokeInterface) {
                     $parameters[] = $service();
                 } else {
-                    $parameters[] = $this->get($parameter);
+                    $parameters[] = $service;
                 }
             }
         }

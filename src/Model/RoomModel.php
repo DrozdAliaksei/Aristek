@@ -89,13 +89,13 @@ class RoomModel
     /**
      * @param int $id
      *
-     * @return array
+     * @return array|null
      */
     public function getRoom(int $id): array
     {
         $sql = 'select * from rooms where id = :id';
 
-        return $this->connection->fetch($sql, ['id' => $id]);
+        return $this->connection->fetch($sql, ['id' => $id]) ?: null;
     }
 
     /**

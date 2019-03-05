@@ -9,9 +9,9 @@
 return [
     'parameters' => [
         'database'     => [
-            'dsn'      => 'mysql:host=localhost; dbname=basic',
+            'dsn'      => 'mysql:host=localhost; dbname=smart-home',
             'user'     => 'root',
-            'password' => '1967',
+            'password' => '@r1st3k',
         ],
         'menu'         => require __DIR__.'/menu.php',
         'security'     => require __DIR__.'/security.php',

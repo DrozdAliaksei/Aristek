@@ -11,11 +11,6 @@ namespace Core\HTTP\Exception;
 class NotFoundException extends RequestException
 {
     /**
-     * @var \Throwable
-     */
-    private $previous;
-
-    /**
      * NotFoundException constructor.
      *
      * @param string          $message
@@ -25,18 +20,5 @@ class NotFoundException extends RequestException
     public function __construct(string $message = 'Not found', int $code = 404, \Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
-        $this->message = $message;
-        $this->code = $code;
-        $this->previous = $previous;
-    }
-
-    public function getStatusCode(): int
-    {
-        return $this->code;
-    }
-
-    public function getHeaders(): array
-    {
-
     }
 }

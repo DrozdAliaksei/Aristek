@@ -164,9 +164,9 @@ class InstallationSchemeModel
     /**
      * @param int $id
      *
-     * @return array
+     * @return array|null
      */
-    public function getScheme(int $id): array
+    public function getScheme(int $id)
     {
         $sql = 'SELECT * FROM installation_scheme WHERE id = :id';
         $scheme = $this->connection->fetch($sql, ['id' => $id]);
@@ -181,7 +181,7 @@ class InstallationSchemeModel
             $scheme['role'] = $scheme_roles;
         }
 
-        return $scheme;
+        return $scheme ?: null;
     }
 
     /**

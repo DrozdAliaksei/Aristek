@@ -96,7 +96,7 @@ class EquipmentModel
     {
         $sql = 'select * from equipments where id = :id';
 
-        return $this->connection->fetch($sql, ['id' => $id]);
+        return $this->connection->fetch($sql, ['id' => $id]) ?: null;
     }
 
     /**
