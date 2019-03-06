@@ -45,13 +45,32 @@ class UserModel
     }
 
     /**
+     * @param array $params
+     *
      * @return array
      */
-    public function getList(): array
+    public function getList(array $params = []): array
     {
-        $sql = 'SELECT * FROM users';
+        $sql = 'SELECT * FROM users ';
+        $sql = $this->prepareQuery($sql, $params);
 
         return $this->connection->fetchAll($sql);
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return int
+     */
+    public function getCountOfPages(array $params): int
+    {
+
+        $limit = $params['page']['limit'];
+        $sql = 'SELECT COUNT(1) FROM users';
+        unset($params['page']);
+        $sql = $this->prepareQuery($sql, $params);
+
+        return ceil($this->connection->fetch($sql, null, \PDO::FETCH_COLUMN) / $limit);
     }
 
     /**
@@ -169,10 +188,44 @@ class UserModel
         return $user;
     }
 
+    /**
+     * @return int
+     */
     public function getCountOfAdmins()
     {
-        $sql = 'SELECT count(id) FROM users WHERE role =:role';
+        $sql = 'SELECT COUNT(1) FROM users WHERE role =:role';
 
-        return $this->connection->fetch($sql, ['role' => RolesEnum::ADMIN])['count(id)'];
+        return $this->connection->fetch($sql, ['role' => RolesEnum::ADMIN], \PDO::FETCH_COLUMN);
+    }
+
+    /**
+     * @param string $sql
+     * @param array  $params
+     *
+     * @return string
+     */
+    private function prepareQuery(string $sql, array $params): string
+    {
+        $where = [];
+        if ($params['filter']['role']) {
+            $where[] = sprintf('role= %s ', $this->connection->quote($params['filter']['role']));
+        }
+        if ($params['filter']['login']) {
+            $where[] = sprintf(
+                '(login like %s ) ',
+                $this->connection->quote('%'.$params['filter']['login'].'%')
+            );
+        }
+        if ($where) {
+            $sql .= ' where '.implode(' AND ', $where);
+        }
+        if ($params['order_by']) {
+            $sql .= sprintf(' order by %s %s ', $params['order_by'], $params['order_dir']);
+        }
+        if ($params['page']['limit']) {
+            $sql .= sprintf(' limit %s offset %s ', (int) $params['page']['limit'], (int) $params['page']['offset']);
+        }
+
+        return $sql;
     }
 }

@@ -1,6 +1,6 @@
 .add {
     display: flex;
-    width: 100%;
+    width: 85%;
     justify-content: flex-end;
 }
 
@@ -11,8 +11,7 @@
     font-size: 17px;
     width: auto;
     padding: 10px;
-    margin: 10px;
-    margin-right: 7.5%;
+    margin: 10px 0;
     background-color: rgb(238, 238, 238);
     display: flex;
     color: #ffffff;

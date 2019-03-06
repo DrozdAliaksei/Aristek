@@ -39,7 +39,7 @@
           <?php foreach (\Enum\RolesEnum::getAll() as $role) { ?>
             <option value="<?php echo $role ?>"
                 <?php
-                if ($this->data['role'] == false && $role == 'admin') {
+                if ($this->data['roles'] == false && $role == 'admin') {
                     continue;
                 }
                 if ($form->getData()['role'] === $role) {

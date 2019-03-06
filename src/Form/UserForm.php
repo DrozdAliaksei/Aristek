@@ -18,6 +18,9 @@ class UserForm
 
     private $violations = [];
 
+    /**
+     * @var UserModel
+     */
     private $userModel;
 
     /**

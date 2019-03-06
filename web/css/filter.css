@@ -1,0 +1,70 @@
+.filter {
+    display: flex;
+    height: 40px;
+    width: 85%;
+    margin: 10px;
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #e2c860;
+}
+
+.filter select {
+    height: 27px;
+    border-radius: 3px;
+}
+
+.filter label {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.filter input {
+    height: 23px;
+    width: 200px;
+    border-radius: 4px;
+}
+
+.apply, .reset {
+    background-color: rgb(238, 238, 238);
+    height: 31px;
+    width: 120px;
+    font-size: 17px;
+    /*font-weight: bold;*/
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.pagination {
+    display: flex;
+    height: 40px;
+    width: 85%;
+    margin: 10px;
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
+    background-color: #e2c860;
+}
+
+.pagination-pages {
+    display: flex;
+    background-color: #e2c860;
+}
+
+.pagination-pages button {
+    height: 27px;
+    width: 50px;
+}
+
+.current-page{
+
+}
+
+.count-pages{
+
+}
+
+.separator{
+    content: ' / ';
+}

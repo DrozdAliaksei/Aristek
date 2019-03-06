@@ -15,6 +15,7 @@ use Core\Response\Response;
 use Core\Request\Request;
 use Core\Template\Renderer;
 use Exception;
+use Form\UsersFilterForm;
 use Form\ProfileForm;
 use Form\UserForm;
 use Model\UserModel;
@@ -63,14 +64,33 @@ class UsersController
     }
 
     /**
+     * @param Request $request
+     *
      * @return Response
+     * @throws Exception
      */
-    public function list(/* Request $request */): Response
+    public function list(Request $request): Response
     {
-        $users = $this->userModel->getList();
         $path = 'Users/list.php';
+        $form = new UsersFilterForm($this->userModel);
+        $formData = $form->getData();
+        $form->handleRequest($request);
 
-        return new Response($this->renderer->render($path, ['users' => $users]));
+        if ($form->isValid()) {
+            $formData = $form->getData();
+        } else {
+            foreach ($form->getViolations() as $message) {
+                $this->messageBag->addError($message);
+            }
+        }
+
+        $properties = [
+            'users'       => $this->userModel->getList($formData),
+            'form'        => $form,
+            'count_pages' => $this->userModel->getCountOfPages($formData),
+        ];
+
+        return new Response($this->renderer->render($path, $properties));
     }
 
     /**

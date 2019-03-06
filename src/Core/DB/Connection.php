@@ -109,4 +109,14 @@ class Connection
     {
         return $this->pdo->lastInsertId();
     }
+
+    /**
+     * @param string $value
+     *
+     * @return string
+     */
+    public function quote(string $value): string
+    {
+        return $this->pdo->quote($value);
+    }
 }

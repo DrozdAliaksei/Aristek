@@ -16,7 +16,7 @@ class RequestFactory
     public static function createRequest(): Request
     {
         $request = new Request(
-            self::getPath(),self::getMethod(), self::getRequest()
+            self::getPath(), self::getMethod(), self::getRequest()
         );
 
         return $request;
@@ -25,9 +25,9 @@ class RequestFactory
     /**
      * @return string
      */
-    private static function getPath() :string
+    private static function getPath(): string
     {
-        return $_SERVER['REQUEST_URI'];
+        return parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     }
 
     /**
@@ -41,7 +41,7 @@ class RequestFactory
     /**
      * @return string
      */
-    private static function getMethod():string
+    private static function getMethod(): string
     {
         return $_SERVER['REQUEST_METHOD'];
     }
