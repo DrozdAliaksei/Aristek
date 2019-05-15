@@ -10,6 +10,8 @@ namespace Controller;
 
 use Core\HTTP\Exception\NotFoundException;
 use Core\MessageBag;
+use Core\Response\JSONResource;
+use Core\Response\JsonResponse;
 use Core\Response\RedirectResponse;
 use Core\Response\Response;
 use Core\Request\Request;
@@ -88,6 +90,17 @@ class InstallationSchemeController
         $path = 'InstallationScheme/list.php';
 
         return new Response($this->renderer->render($path, ['schems' => $schems, 'role' => $role]));
+    }
+
+    /**
+     * @return Response
+     */
+    public function listM(/* Request $request */): Response
+    {
+        $role = $this->securityService->getRole();
+        $schems = $this->schemeModel->getSchemesAvailableToRoles($role);
+
+        return new Response(new JSONResource('schemes',$schems));
     }
 
     /**
@@ -195,5 +208,24 @@ class InstallationSchemeController
         $this->schemeModel->changeStatus($id, $status);
 
         return new RedirectResponse('/installation-scheme');
+    }
+
+    public function changeStatusMob(Request $request)
+    {
+        $id = $request->get('id');
+        $scheme = $this->schemeModel->getScheme($id);
+        if ($scheme === null) {
+            throw new NotFoundException('Scheme not found');
+        }
+        $status = $request->get('status');
+
+        if ($status == 1) {
+            $status = 0;
+        } else {
+            $status = 1;
+        }
+        $this->schemeModel->changeStatus($id, $status);
+        $status = $this->schemeModel->getSchemeStatus($id);
+        return new Response(new JSONResource('controller',$status));
     }
 }

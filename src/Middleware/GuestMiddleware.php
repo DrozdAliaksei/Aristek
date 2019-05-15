@@ -39,10 +39,9 @@ class GuestMiddleware implements MiddlewareInterface
      */
     public function handle(Route $route, Request $request)
     {
-        if(!$this->securityService->isAuthorized() && $request->getPath() !== '/login'){
+        if(!$this->securityService->isAuthorized() && ($request->getPath() !== '/login' && $request->getPath() !== '/login/mobile')){
             return new RedirectResponse('/login');
         }
-
 
         return null;
     }

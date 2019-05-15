@@ -19,9 +19,9 @@
 -- Current Database: `basic`
 --
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `basic` /*!40100 DEFAULT CHARACTER SET latin1 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `smart_home` /*!40100 DEFAULT CHARACTER SET latin1 */;
 
-USE `basic`;
+USE `smart_home`;
 
 --
 -- Table structure for table `equipment`

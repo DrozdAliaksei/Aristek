@@ -184,6 +184,14 @@ class InstallationSchemeModel
         return $scheme ?: null;
     }
 
+    public function getSchemeStatus(int $id)
+    {
+        $sql = 'SELECT status FROM installation_scheme WHERE id = :id';
+        $scheme = $this->connection->fetch($sql, ['id' => $id]);
+
+        return $scheme;
+    }
+
     /**
      * @param int $id
      * @param int $status

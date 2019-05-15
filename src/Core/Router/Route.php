@@ -86,7 +86,7 @@ class Route
             array_shift($matches);
             $values = array_combine(array_keys($this->rules),$matches) ;
         }
-        //echo json_encode(['values'=>$values, 'rules' => $this->rules, 'matches'=> $matches]);
+//        echo json_encode(['values'=>$values, 'rules' => $this->rules, 'matches'=> $matches]);
         return $values;
     }
 

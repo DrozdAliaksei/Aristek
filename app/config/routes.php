@@ -31,3 +31,7 @@ Router::add('/installation-scheme/create', \Controller\InstallationSchemeControl
 Router::add('/installation-scheme/{id}/edit', \Controller\InstallationSchemeController::class, 'edit', ['id' => '\d+']);
 Router::add('/installation-scheme/{id}/delete', \Controller\InstallationSchemeController::class, 'delete', ['id' => '\d+']);
 Router::add('/installation-scheme/{id}/{status}/change-status', \Controller\InstallationSchemeController::class, 'changeStatus', ['id' => '\d+','status' => '\d+']);
+
+Router::add('/login/mobile', \Controller\SecurityController::class, 'loginMob');
+Router::add( '/installation-scheme/mobile', \Controller\InstallationSchemeController::class, 'listM');
+Router::add('/installation-scheme/{id}/{status}/change-status/mobile', \Controller\InstallationSchemeController::class, 'changeStatusMob', ['id' => '\d+','status' => '\d+']);

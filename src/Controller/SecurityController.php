@@ -11,7 +11,7 @@ namespace Controller;
 
 use Core\HTTP\Session;
 use Core\Request\Request;
-use Core\Response\{RedirectResponse, Response};
+use Core\Response\{JSONResource, RedirectResponse, Response};
 use Core\Template\Renderer;
 use Form\LoginForm;
 use Service\SecurityService;
@@ -68,12 +68,31 @@ class SecurityController
     }
 
     /**
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function loginMob(Request $request)
+    {
+        $form = new LoginForm($this->securityService);
+        if ($request->getMethod() === Request::POST) {
+            $form->handleRequest($request);
+            if ($form->isValid()) {
+                $this->securityService->authorize($form->getData());
+                return new Response(new JSONResource('connection_status',"true"));
+            }
+        }
+
+        return new Response(new JSONResource('connection_status',["false"]));
+    }
+
+    /**
      * @return RedirectResponse
      */
     public function logout(): RedirectResponse
     {
         $this->securityService->logout();
 
-        return new RedirectResponse('/installation-scheme');
+        return new RedirectResponse('/login');
     }
 }
