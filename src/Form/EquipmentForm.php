@@ -39,6 +39,7 @@ class EquipmentForm
 
         $this->data['name'] = $request->get('name');
         $this->data['description'] = $request->get('description');
+        $this->data['BCM_GPIO'] = $request->get('gpio');
 
         $id = $this->data['id'] ?? null;
         if ($this->equipmentModel->checkName($this->data['name'], $id)) {
@@ -47,6 +48,10 @@ class EquipmentForm
         if (strlen($this->data['description']) < 3) {
             $this->violations['description'] = 'Description is too short';
         }
+        if($this->data['BCM_GPIO'] < 0 || $this->data['BCM_GPIO'] > 40){
+            $this->violations['BCM_GPIO'] = 'Wrong GPIO number';
+        }
+
     }
 
     /**

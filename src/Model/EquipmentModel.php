@@ -42,8 +42,8 @@ class EquipmentModel
      */
     public function create(array $equipment)
     {
-        $sql = 'INSERT INTO equipments (name,description) 
-                VALUES (:name,:description)';
+        $sql = 'INSERT INTO equipments (name,description,BCM_GPIO) 
+                VALUES (:name,:description,:BCM_GPIO)';
         $this->connection->execute($sql, $equipment);
 
     }
@@ -64,7 +64,7 @@ class EquipmentModel
     public function edit(array $equipment, int $id)
     {
         $equipment['id'] = $id;
-        $sql = 'UPDATE equipments SET name=:name,description=:description WHERE id=:id';
+        $sql = 'UPDATE equipments SET name=:name,description=:description, BCM_GPIO=:BCM_GPIO WHERE id=:id';
         $this->connection->execute($sql, $equipment);
     }
 

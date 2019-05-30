@@ -168,7 +168,9 @@ class InstallationSchemeModel
      */
     public function getScheme(int $id)
     {
-        $sql = 'SELECT * FROM installation_scheme WHERE id = :id';
+        $sql = 'SELECT * FROM installation_scheme
+        INNER JOIN equipments ON installation_scheme.equipment_id = equipments.id
+        WHERE installation_scheme.id = :id';
         $scheme = $this->connection->fetch($sql, ['id' => $id]);
         if ($scheme) {
             $sql = 'SELECT * FROM installation_scheme_roles WHERE installation_scheme_id = :id';

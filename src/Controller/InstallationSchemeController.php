@@ -20,6 +20,7 @@ use Form\InstallationSchemeForm;
 use Model\EquipmentModel;
 use Model\InstallationSchemeModel;
 use Model\RoomModel;
+use Prophecy\PhpDocumentor\MethodTagRetrieverInterface;
 use Service\SecurityService;
 
 class InstallationSchemeController
@@ -200,10 +201,14 @@ class InstallationSchemeController
         }
         $status = $request->get('status');
 
+        $setmode = shell_exec("/usr/local/bin/gpio -g mode ".$scheme['BCM_GPIO']." out");
+
         if ($status == 1) {
             $status = 0;
+            $gpio_off = shell_exec("/usr/local/bin/gpio -g write ".$scheme['BCM_GPIO']." 0");
         } else {
             $status = 1;
+            $gpio_on = shell_exec("/usr/local/bin/gpio -g write ".$scheme['BCM_GPIO']." 1");
         }
         $this->schemeModel->changeStatus($id, $status);
 
@@ -219,10 +224,14 @@ class InstallationSchemeController
         }
         $status = $request->get('status');
 
+        $setmode = shell_exec("/usr/local/bin/gpio -g mode ".$scheme['BCM_GPIO']." out");
+
         if ($status == 1) {
             $status = 0;
+            $gpio_off = shell_exec("/usr/local/bin/gpio -g write ".$scheme['BCM_GPIO']." 0");
         } else {
             $status = 1;
+            $gpio_on = shell_exec("/usr/local/bin/gpio -g write ".$scheme['BCM_GPIO']." 1");
         }
         $this->schemeModel->changeStatus($id, $status);
         $status = $this->schemeModel->getSchemeStatus($id);

@@ -28,6 +28,8 @@
     <label for="description">Description</label>
     <input type="text" id="description" name="description" placeholder="description" required value="<?php echo $form->getData(
     )['description']; ?>">
+      <label for="gpio">BCM GPIO</label>
+      <input type="number" id="gpio" name="gpio" placeholder="gpio" required value="<?php echo $form->getData()['BCM_GPIO']; ?>">
     <button type="submit" name="submit">Accept</button>
   </form>
 </div>
